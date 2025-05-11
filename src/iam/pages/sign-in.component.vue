@@ -31,20 +31,21 @@ export default {
         <form @submit.prevent="onSignIn">
           <div class="form-group">
             <pv-float-label>
-              <label for="username">Username</label>
+              <label for="username">{{$t('username')}}</label>
               <pv-input-text id="username" v-model="username" :class="{'p-invalid': !username}"/>
-              <small v-if="!username" class="p-invalid">Username is required</small>
+              <small v-if="!username" class="p-invalid"> {{$t('usernameRequired')}}</small>
             </pv-float-label>
           </div>
+          <br>
           <div class="form-group">
             <pv-float-label>
-              <label for="password">Password</label>
-              <pv-input-text id="password" v-model="password" :class="{'p-invalid': !password}" type="password" />
-              <small v-if="!password" class="p-invalid">Password is required</small>
+              <label for="password">{{$t('password')}}</label>
+              <pv-input-text id="password" v-model="password" :class="{'p-invalid': !password}" type="password"/>
+              <small v-if="!password" class="p-invalid">{{$t('passwordRequired')}}</small>
             </pv-float-label>
           </div>
           <div class="button-container">
-            <button type="submit" class="auth-button">Sign in</button>
+            <button type="submit" class="auth-button">{{$t('signIn')}}</button>
           </div>
         </form>
       </template>
@@ -63,5 +64,9 @@ export default {
   background-color: #005f40;
   padding: 10px 20px;
   color: white;
+}
+
+.login-card{
+
 }
 </style>
