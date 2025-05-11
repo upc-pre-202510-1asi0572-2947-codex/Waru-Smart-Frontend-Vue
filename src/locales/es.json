@@ -30,5 +30,14 @@
   "askQuestion":"Pregunta",
   "categoryQuestion":"Categoria",
   "cropInformationManagement":"Gestion de informacion de cultivos",
-  "consultationForum":"Foro de consultas"
+  "consultationForum":"Foro de consultas",
+  "createProfile": "Crear Perfil",
+  "email": "Correo Electronico",
+  "country": "País",
+  "city":"Ciudad",
+  "apply": "Registrar",
+  "myProfile":"Mi Perfil",
+  "signOut": "Cerrar sesión",
+  "change": "Cambiar",
+  "check": "Verificar"
 }

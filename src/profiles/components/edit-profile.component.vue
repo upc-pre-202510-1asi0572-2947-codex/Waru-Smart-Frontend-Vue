@@ -124,7 +124,7 @@ export default {
       <template #title>
         <div class="profile-header">
           <br>
-          <h2 class="black">My Profile</h2>
+          <h2 class="black">{{$t('myProfile')}}</h2>
         </div>
       </template>
       <template #content>
@@ -133,28 +133,32 @@ export default {
             <img class="rounded-full large-image" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
           </div>
           <div class="profile-details">
-            <h3>Name:</h3>
+            <h3>{{$t('name')}}:</h3>
             <pv-input-text v-model="newName" :disabled="boolName" />
-            <pv-button class="green-button" v-if="!boolName" @click="saveNameChange(newName)">Check</pv-button>
-            <a @click="changeName()">Change Name</a>
+            <pv-button class="green-button check-button" v-if="!boolName" @click="saveNameChange(newName)">{{$t('check')}}</pv-button>
+            <br>
+            <pv-button class="change-data-button" @click="changeName()"> {{$t('change')}} {{$t('name')}}</pv-button>
             <pv-divider/>
-            <h3>Email:</h3>
+            <h3>{{$t('email')}}:</h3>
             <pv-input-text v-model="newEmail" :disabled="boolEmail" />
-            <pv-button class="green-button" v-if="!boolEmail" @click="saveEmailChange(newEmail)">Check</pv-button>
-            <a @click="changeEmail()">Change Email</a>
+            <pv-button class="green-button check-button" v-if="!boolEmail" @click="saveEmailChange(newEmail)">{{$t('check')}}</pv-button>
+            <br>
+            <pv-button class="change-data-button" @click="changeEmail()">{{$t('change')}} {{$t('email')}}</pv-button>
             <pv-divider/>
-            <h3>Country:</h3>
+            <h3>{{$t('country')}}:</h3>
             <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" :disabled="boolCountry" />
-            <pv-button class="green-button" v-if="!boolCountry" @click="saveCountryChange(newCountry)">Check</pv-button>
-            <a @click="changeCountry()">Change Country</a>
+            <pv-button class="green-button check-button" v-if="!boolCountry" @click="saveCountryChange(newCountry)">{{$t('check')}}</pv-button>
+            <br>
+            <pv-button class="change-data-button" @click="changeCountry()">{{$t('change')}} {{$t('country')}}</pv-button>
             <pv-divider/>
-            <h3>City:</h3>
+            <h3>{{$t('city')}}:</h3>
             <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" :disabled="boolCity" />
-            <pv-button class="green-button" v-if="!boolCity" @click="saveCityChange(newCity)">Check</pv-button>
-            <a @click="changeCity()">Change City</a>
+            <pv-button class="green-button check-button" v-if="!boolCity" @click="saveCityChange(newCity)">{{$t('check')}}</pv-button>
+            <br>
+            <pv-button class="change-data-button" @click="changeCity()">{{$t('change')}} {{$t('city')}}</pv-button>
             <pv-divider/>
-            <pv-button class="green-button" @click="confirmApply">Apply</pv-button>
-            <pv-button class="red-button" @click="signOut()">Sign Out</pv-button>
+            <pv-button class="green-button" @click="confirmApply">{{$t('apply')}}</pv-button>
+            <pv-button class="red-button" @click="signOut()">{{$t('signOut')}}</pv-button>
           </div>
         </div>
       </template>
@@ -172,6 +176,17 @@ export default {
 .green-button {
   background-color: #005f40;
 }
+
+.check-button {
+  margin-left: 10px;
+}
+
+.change-data-button {
+  background-color: #ffffff;
+  color: #465aed;
+  margin: 10px;
+}
+
 .smaller-div {
   width: 55rem;
   margin-left: auto;
