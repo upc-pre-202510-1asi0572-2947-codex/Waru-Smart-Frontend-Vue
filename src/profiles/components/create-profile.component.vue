@@ -77,7 +77,7 @@ export default {
       <template #title>
         <div class="profile-header">
           <br>
-          <h2 class="black">Create Profile</h2>
+          <h2 class="black">{{$t('createProfile')}}</h2>
         </div>
       </template>
       <template #content>
@@ -86,19 +86,19 @@ export default {
             <img class="rounded-full large-image" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
           </div>
           <div class="profile-details">
-            <h3>Name:</h3>
+            <h3>{{$t('name')}}:</h3>
             <pv-input-text v-model="newName" />
             <pv-divider/>
-            <h3>Email:</h3>
+            <h3>{{$t('email')}}:</h3>
             <pv-input-text v-model="newEmail" />
             <pv-divider/>
-            <h3>Country:</h3>
-            <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" />
+            <h3>{{$t('country')}}:</h3>
+            <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" style="width:150px"/>
             <pv-divider/>
-            <h3>City:</h3>
-            <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" />
+            <h3>{{$t('city')}}:</h3>
+            <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" style="width:150px"/>
             <pv-divider/>
-            <pv-button class="green-button" @click="confirmApply">Apply</pv-button>
+            <pv-button class="green-button" @click="confirmApply">{{$t('apply')}}</pv-button>
           </div>
         </div>
       </template>
