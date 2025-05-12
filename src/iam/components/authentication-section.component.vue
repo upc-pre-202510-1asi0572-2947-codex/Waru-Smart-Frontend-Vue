@@ -10,8 +10,8 @@
       </div>
     </div>
     <div v-else>
-      <pv-button class="auth-button" @click="onSignIn">Sign In</pv-button>
-      <pv-button class="auth-button" @click="onSignUp">Sign Up</pv-button>
+      <pv-button class="auth-button" @click="onSignIn">{{$t('signIn')}}</pv-button>
+      <pv-button class="auth-button" @click="onSignUp">{{$t('signUp')}}</pv-button>
     </div>
   </div>
 </template>

@@ -38,7 +38,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    let baseTitle = 'Chaquitaclla';
+    let baseTitle = 'WaruSmart';
     document.title = `${baseTitle} | ${to.meta['title']}`;
     authenticationGuard(to, from, next);
 });

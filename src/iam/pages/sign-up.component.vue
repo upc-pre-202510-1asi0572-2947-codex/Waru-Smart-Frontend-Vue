@@ -31,20 +31,21 @@ export default {
         <form @submit.prevent="onSignUp">
           <div class="form-group">
             <pv-float-label>
-              <label for="username">Username</label>
+              <label for="username">{{$t('username')}}</label>
               <pv-input-text id="username" v-model="username" :class="{'p-invalid': !username}"/>
-              <small v-if="!username" class="p-invalid">Username is required</small>
+              <small v-if="!username" class="p-invalid">{{$t('usernameRequired')}}</small>
             </pv-float-label>
           </div>
+          <br>
           <div class="form-group">
             <pv-float-label>
-              <label for="password">Password</label>
+              <label for="password">{{$t('password')}}</label>
               <pv-input-text id="password" v-model="password" :class="{'p-invalid': !password}" type="password" />
-              <small v-if="!password" class="p-invalid">Password is required</small>
+              <small v-if="!password" class="p-invalid">{{$t('passwordRequired')}}</small>
             </pv-float-label>
           </div>
           <div class="button-container">
-            <button type="submit" class="auth-button">Sign up</button>
+            <button type="submit" class="auth-button">{{$t('signUp')}}</button>
           </div>
         </form>
       </template>
