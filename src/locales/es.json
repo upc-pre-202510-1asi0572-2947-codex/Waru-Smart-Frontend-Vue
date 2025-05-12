@@ -40,4 +40,10 @@
   "signOut": "Cerrar sesión",
   "change": "Cambiar",
   "check": "Verificar"
+  "username":"Nombre de usuario",
+  "password": "Contraseña",
+  "usernameRequired": "Nombre obligatorio   ",
+  "passwordRequired": "Contraseña requerida",
+  "signIn": "Iniciar sesión",
+  "signUp": "Registrarse"
 }

@@ -1,10 +1,16 @@
 <script>
 import LanguageSwitcher from "./language-switcher.component.vue";
 import AuthenticationSection from "../../iam/components/authentication-section.component.vue";
+import {useAuthenticationStore} from "../../iam/services/authentication.store.js";
 
 export default {
   name: "toolbar-content",
   components: {LanguageSwitcher,AuthenticationSection},
+  data(){
+    return{
+      authenticationStore: useAuthenticationStore()
+    }
+  }
 }
 </script>
 
@@ -16,7 +22,7 @@ export default {
       </span>
     </template>
 
-    <template #center >
+    <template #center v-if = "this.authenticationStore.isSignedIn">
       <div class="toolbar-section center-start ">
           <router-link to="/control-panel">
             <pv-button class="bg-transparent mr-4">

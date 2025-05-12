@@ -40,4 +40,10 @@
   "signOut": "Sign out",
   "change": "Change",
   "check": "Check"
+  "username":"Username",
+  "password": "Password",
+  "usernameRequired": "Username is required",
+  "passwordRequired": "Password is required",
+  "signIn": "Sign In",
+  "signUp": "Sign Up"
 }
