@@ -52,42 +52,49 @@ export default {
   created() {
     this.sowingService = new SowingsApiService();
 
-    this.sowingService
-        .getAll()
-        .then((response) => {
-          let data;
-          if (typeof response.data === 'string') {
-            try {
-              data = JSON.parse(response.data);
-            } catch (error) {
-              console.error('Error parsing response.data:', error);
+    // Obtén el userId del localStorage
+    const userId = localStorage.getItem('userId');
+
+    if (userId) {
+      // Llama al servicio para obtener los sowings del usuario
+      this.sowingService.getByUserId(userId)
+          .then((response) => {
+            let data;
+            if (typeof response.data === 'string') {
+              try {
+                data = JSON.parse(response.data);
+              } catch (error) {
+                console.error('Error parsing response.data:', error);
+                return;
+              }
+            } else if (typeof response.data === 'object') {
+              data = response.data;
+            } else {
+              console.error('Unexpected type of response.data:', typeof response.data);
               return;
             }
-          } else if (typeof response.data === 'object') {
-            data = response.data;
-          } else {
-            console.error('Unexpected type of response.data:', typeof response.data);
-            return;
-          }
-          console.log('Type of data:', typeof data);
-          console.log('Content of data:', data);
-          if (Array.isArray(data)) {
-            let sowings = data;
-            Promise.all(sowings.map((sowing) => Sowing.toDisplayableSowing(sowing)))
-                .then((displayableSowings) => {
-                  this.sowings = displayableSowings;
-                  console.log('Sowings:', this.sowings);
-                })
-                .catch((error) => {
-                  console.error('Error converting sowings to displayable format:', error);
-                });
-          } else {
-            console.error('Error: data is not an array');
-          }
-        })
-        .catch((error) => {
-          console.error('Error loading sowings:', error);
-        });
+
+            if (Array.isArray(data)) {
+              let sowings = data;
+              Promise.all(sowings.map((sowing) => Sowing.toDisplayableSowing(sowing)))
+                  .then((displayableSowings) => {
+                    this.sowings = displayableSowings;
+                    console.log('Sowings for user:', this.sowings);
+                  })
+                  .catch((error) => {
+                    console.error('Error converting sowings to displayable format:', error);
+                  });
+            } else {
+              console.error('Error: data is not an array');
+            }
+          })
+          .catch((error) => {
+            console.error('Error loading sowings for user:', error);
+          });
+    } else {
+      console.error('No userId found in localStorage');
+    }
+
     this.initFilters();
   },
   beforeUnmount() {

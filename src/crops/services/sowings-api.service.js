@@ -50,6 +50,10 @@ export class SowingsApiService{
             });
     }
 
+    getByUserId(userId) {
+        return http.get(`/crops-management/sowings/${userId}/user`);
+    }
+
     findByTitle(title) {
         return http.get(`/crops-management/crops/sowings?title=${title}`);
     }

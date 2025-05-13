@@ -27,16 +27,25 @@ export default {
   },
   methods:{
     reloadData() {
-      this.sowingService.getAllFalse()
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        console.error("No se encontró userId en localStorage");
+        return;
+      }
+
+      this.sowingService
+          .getByUserId(userId)
           .then((response) => {
             let sowings = response.data;
-            return Promise.all(sowings.map((sowing) => Sowing.toDisplayableSowing(sowing)));
+            return Promise.all(
+                sowings.map((sowing) => Sowing.toDisplayableSowing(sowing))
+            );
           })
           .then((processedSowings) => {
             this.sowings = processedSowings;
           })
           .catch((error) => {
-            console.error('Error fetching data:', error);
+            console.error("Error al cargar los sowings del usuario:", error);
           });
     },
 
@@ -103,22 +112,33 @@ export default {
       let harvestDate = new Date(currentDate.setMonth(currentDate.getMonth() + 4));
       this.sowing.harvest_date = new Date(harvestDate.getFullYear(), harvestDate.getMonth(), harvestDate.getDate()).toISOString().split('T')[0];
 
-      this.sowing.user_id = 1;
+      // Obtén el userId del localStorage
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('No se encontró userId en localStorage');
+        return;
+      }
 
+      this.sowing.user_id = userId;
       this.sowing.crop_id = this.sowing.crop_name.id;
       this.sowing.crop_name = this.sowing.crop_name.name;
 
       this.sowing = Sowing.fromDisplayableSowing(this.sowing);
-      let sowingResource =  {
+      let sowingResource = {
         areaLand: this.sowing.area_land,
-        cropId: this.sowing.crop_id
-      }
+        cropId: this.sowing.crop_id,
+        userId: parseInt(userId) // Asegúrate de que sea un número
+      };
+
       console.log(sowingResource);
       this.sowingService.create(sowingResource)
           .then((response) => {
             this.sowing = Sowing.toDisplayableSowing(response.data);
             this.sowings.push(this.sowing);
             this.reloadData();
+          })
+          .catch((error) => {
+            console.error('Error al crear el sowing:', error);
           });
     },
 
@@ -169,16 +189,31 @@ onPhaseChangeConfirmed() {
     },
 
     updateSowing() {
+      // Convertir el objeto sowing al formato adecuado
       this.sowing = Sowing.fromDisplayableSowing(this.sowing);
+
+      // Crear el objeto de actualización
       const updateResource = {
         areaLand: this.sowing.area_land,
         cropId: this.sowing.crop_name.id
       };
-      console.log(updateResource);
+
+      console.log('Enviando datos para actualizar:', updateResource);
+
+      // Llamar al servicio para actualizar el sowing
       this.sowingService
           .update(this.sowing.id, updateResource)
           .then((response) => {
+            console.log('Respuesta del backend:', response.data);
+
+            // Actualizar el sowing con los datos devueltos por el backend
+            this.sowing = Sowing.toDisplayableSowing(response.data);
+
+            // Recargar la lista de sowings
             this.reloadData();
+          })
+          .catch((error) => {
+            console.error('Error al actualizar el sowing:', error);
           });
     },
 
@@ -196,23 +231,31 @@ onPhaseChangeConfirmed() {
     },
   },
 
-  created(){
+  created() {
     console.log('Tabla creada');
     this.sowingService = new SowingsApiService();
 
-    this.sowingService.getAllFalse()
-        .then((response) => {
-          console.log('Raw sowings data:', response.data);  // Log raw data
-          let sowings = response.data;
-          return Promise.all(sowings.map((sowing) => Sowing.toDisplayableSowing(sowing)));
-        })
-        .then((processedSowings) => {
-          this.sowings = processedSowings;
-          console.log('Processed sowings data:', this.sowings);  // Log processed data
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+    // Obtén el userId del localStorage
+    const userId = localStorage.getItem('userId');
+
+    if (userId) {
+      // Llama al servicio para obtener los sowings del usuario
+      this.sowingService.getByUserId(userId)
+          .then((response) => {
+            console.log('Raw sowings data for user:', response.data); // Log raw data
+            let sowings = response.data;
+            return Promise.all(sowings.map((sowing) => Sowing.toDisplayableSowing(sowing)));
+          })
+          .then((processedSowings) => {
+            this.sowings = processedSowings;
+            console.log('Processed sowings data for user:', this.sowings); // Log processed data
+          })
+          .catch((error) => {
+            console.error('Error fetching data for user:', error);
+          });
+    } else {
+      console.error('No userId found in localStorage');
+    }
 
     this.initFilters();
   },
@@ -248,7 +291,7 @@ onPhaseChangeConfirmed() {
             </pv-input-icon>
             <pv-input-text v-model="filters['global'].value" placeholder="Search..." />
           </pv-icon-field>
-          <pv-button label="Add Crop" icon="pi pi-plus" severity="success" class="mr-2 button-brown" @click="onNewItemEventHandler" />
+          <pv-button label="Add Sowing" icon="pi pi-plus" severity="success" class="mr-2 button-brown" @click="onNewItemEventHandler" />
         </div>
       </template>
       <pv-column field="crop_name" header="Crop" style="min-width:8rem"></pv-column>
