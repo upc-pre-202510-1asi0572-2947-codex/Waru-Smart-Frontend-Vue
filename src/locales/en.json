@@ -30,5 +30,20 @@
   "askQuestion":"Ask",
   "categoryQuestion":"Category",
   "cropInformationManagement":"Crop Information Management",
-  "consultationForum":"Consultation Forum"
+  "consultationForum":"Consultation Forum",
+  "createProfile": "Create Profile",
+  "email": "Email",
+  "country": "Country",
+  "city":"City",
+  "apply": "Apply",
+  "myProfile":"My Profile",
+  "signOut": "Sign out",
+  "change": "Change",
+  "check": "Check",
+  "username":"Username",
+  "password": "Password",
+  "usernameRequired": "Username is required",
+  "passwordRequired": "Password is required",
+  "signIn": "Sign In",
+  "signUp": "Sign Up"
 }
