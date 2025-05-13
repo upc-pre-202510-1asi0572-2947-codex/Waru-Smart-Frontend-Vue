@@ -1,5 +1,6 @@
 <script>
 import {SowingsApiService} from "../services/sowings-api.service.js";
+import {CropsRecomendationApiService} from "../services/crops-recomendation-api.service.js";
 import {Sowing} from "../models/sowing.entity.js";
 import SowingItemCreateAndEditDialog from "../components/sowing-item-create-and-edit-dialog.component.vue";
 import ChangePhaseDialog from "../components/change-phase-dialog.component.vue";
@@ -22,10 +23,21 @@ export default {
       isEdit: false,
       submitted: false,
       selectedSowingId: null,
-      historyService: null
+      crops: [],
+      historyService: null,
+      originalSowings: []
     }
   },
   methods:{
+    filterByCrop(cropId) {
+      if (!this.originalSowings || this.originalSowings.length === 0) {
+        console.warn("No hay datos en originalSowings para filtrar.");
+        return;
+      }
+      // Filtra los sowings asociados al crop_id
+      this.sowings = this.originalSowings.filter((sowing) => sowing.crop_id === cropId);
+    },
+
     reloadData() {
       const userId = localStorage.getItem("userId");
       if (!userId) {
@@ -36,13 +48,14 @@ export default {
       this.sowingService
           .getByUserId(userId)
           .then((response) => {
-            let sowings = response.data;
+            const sowings = response.data;
             return Promise.all(
                 sowings.map((sowing) => Sowing.toDisplayableSowing(sowing))
             );
           })
           .then((processedSowings) => {
             this.sowings = processedSowings;
+            this.originalSowings = [...processedSowings]; // Guarda los datos originales
           })
           .catch((error) => {
             console.error("Error al cargar los sowings del usuario:", error);
@@ -98,10 +111,18 @@ export default {
       this.createAndEditDialogIsVisible = false;
       this.isEdit = false;
     },
-    viewSowing(id) {
-      this.selectedSowingId = id;
-      console.log('Selected sowing id:', this.selectedSowingId);
-      this.$router.push({ name: 'crop-information', params: { id: this.selectedSowingId }});
+    viewSowing(rowData) {
+      if (!rowData.crop_id || !rowData.id) {
+        console.error("Faltan los parámetros requeridos cropId o sowingId");
+        return;
+      }
+      this.$router.push({
+        name: 'crop-information',
+        params: {
+          cropId: rowData.crop_id, // Asegúrate de que este campo exista en los datos
+          sowingId: rowData.id,   // Asegúrate de que este campo exista en los datos
+        },
+      });
     },
     createSowing() {
       this.sowing.id = "";
@@ -229,11 +250,45 @@ onPhaseChangeConfirmed() {
             console.error('Error deleting sowing:', error);
           });
     },
+    loadCrops() {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        console.error("No se encontró userId en localStorage");
+        return;
+      }
+      // Obtén los sowings asociados al usuario
+      this.sowingService.getByUserId(userId)
+          .then((response) => {
+            const sowings = response.data;
+            console.log("Sowings obtenidos:", sowings);
+
+            // Extrae los crop_ids únicos
+            const cropIds = [...new Set(sowings.map((sowing) => sowing.crop_id || sowing.cropId))];
+            console.log("Crop IDs únicos antes de filtrar:", cropIds);
+
+            const validCropIds = cropIds.filter((id) => id !== undefined);
+            console.log("Crop IDs válidos:", validCropIds);
+
+            // Obtén todos los crops y filtra solo los que tienen un sowing asociado
+            return this.cropsService.getAllCrops()
+                .then((response) => {
+                  this.crops = response.data.filter((crop) => validCropIds.includes(crop.id));
+                  console.log("Crops filtrados:", this.crops); // Verifica los crops filtrados
+                });
+          })
+          .catch((error) => {
+            console.error("Error al cargar los cultivos o sowings:", error);
+          });
+    },
   },
 
   created() {
     console.log('Tabla creada');
     this.sowingService = new SowingsApiService();
+    this.cropsService = new CropsRecomendationApiService();
+    this.loadCrops();
+    this.initFilters();
+    this.reloadData();
 
     // Obtén el userId del localStorage
     const userId = localStorage.getItem('userId');
@@ -265,13 +320,22 @@ onPhaseChangeConfirmed() {
 
 
 <template>
+  <div class="crop-filter-container">
+    <pv-button
+        v-for="crop in crops"
+        :key="crop.id"
+        :label="crop.name"
+        class="p-button-outlined crop-filter-btn"
+        @click="filterByCrop(crop.id)"
+    />
+  </div>
+
+  <div class="section-title">
+    <h2>{{$t('listCrops')}}</h2>
+  </div>
 
   <div>
-    <h2>
-      {{$t('listCrops')}}
-    </h2>
-  </div>
-  <div>
+    <!-- Tabla de datos -->
     <pv-data-table
         ref="dt"
         :value="sowings"
@@ -298,18 +362,28 @@ onPhaseChangeConfirmed() {
       <pv-column field="start_date" header="Planted Date" style="min-width:15rem"></pv-column>
       <pv-column field="harvest_date" header="Harvest Date" style="min-width:15rem"></pv-column>
       <pv-column field="phenological_phase" header="Phenological Phase" style="min-width:12rem">
-      </pv-column>      <pv-column header="Actions" :exportable="false" style="min-width:8rem">
+      </pv-column>
+      <pv-column header="Actions" :exportable="false" style="min-width:8rem">
         <template #body="slotProps">
           <pv-button icon="pi pi-exclamation-triangle" outlined rounded class="mr-2" @click="changePhenologicalPhase(slotProps.data)" />
           <pv-button icon="pi pi-pencil" outlined rounded class="mr-2" @click="onEditItemEventHandler(slotProps.data)" />
           <pv-button icon="pi pi-trash" outlined rounded severity="danger" @click="onDeleteItemEventHandler(slotProps.data)" />
-          <pv-button icon="pi pi-eye" outlined rounded class="mr-2" @click="viewSowing(slotProps.data.id)"/>
+          <pv-button
+              icon="pi pi-eye"
+              outlined
+              rounded
+              class="mr-2"
+              @click="viewSowing(slotProps.data)"
+          />
         </template>
       </pv-column>
     </pv-data-table>
   </div>
+
+  <!-- Diálogo para cambiar la fase fenológica -->
   <change-phase-dialog :visible.sync="changePhaseDialogVisible" @canceled="onPhaseChangeCanceled" @confirmed="onPhaseChangeConfirmed" />
 
+  <!-- Diálogo para crear o editar un sowing -->
   <sowing-item-create-and-edit-dialog
       :entity="sowing"
       :visible="createAndEditDialogIsVisible"
@@ -318,7 +392,6 @@ onPhaseChangeConfirmed() {
       v-on:canceled="onCanceledEventHandler"
       v-on:saved="onSavedEventHandler($event)"
   />
-
 </template>
 
 <style scoped>
@@ -340,5 +413,55 @@ h2 {
   color: black;
 }
 
+.crop-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 1rem 1rem 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background-color: #f5f7f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.crop-filter-btn {
+  background-color: #ffffff;
+  border-color: #e0e0e0;
+  color: #445566;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.crop-filter-btn:hover {
+  background-color: #f0f4f9;
+  border-color: #c0c8d0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  color: #2c3e50;
+}
+
+.crop-filter-btn:focus {
+  box-shadow: 0 0 0 2px rgba(70, 120, 190, 0.2);
+  border-color: #6c90c0;
+}
+
+.crop-filter-btn.p-button.p-component.p-highlight {
+  background-color: #edf5ff;
+  border-color: #4d7fc0;
+  color: #2c5282;
+}
+
+.section-title {
+  margin-top: 0.5rem;
+}
+
+.section-title h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0.5rem 0;
+  padding: 0 0.5rem;
+}
 
 </style>

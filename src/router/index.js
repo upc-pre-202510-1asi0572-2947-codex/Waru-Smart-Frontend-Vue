@@ -26,7 +26,7 @@ const routes = [
     { path: '/sowing-statistics-reports', component: CropsStatisticsComponent },
     { path: '/control-panel',name: 'control-panel', component: ControlPanelPageComponent},
     { path:'/crop-list-and-registration',component: CropListAndRegistrationManagementComponent},
-    { path: '/crop-information/:id', name: 'crop-information', component: CropInformationManagementComponent},
+    { path: '/crop/:cropId/sowing/:sowingId', name: 'crop-information', component: CropInformationManagementComponent },
     { path: '/crop-history', component: HistoryTableComponent },
     { path: '/consultation-forum',component: ForumManagementComponent },
     { path: '/:pathMatch(.*)*', component: PageNotFoundComponent }
