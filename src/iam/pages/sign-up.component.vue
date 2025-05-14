@@ -62,7 +62,7 @@ export default {
 }
 
 .auth-button {
-  background-color: #005f40;
+  background-color: #3E7C59;
   padding: 10px 20px;
   color: white;
 }

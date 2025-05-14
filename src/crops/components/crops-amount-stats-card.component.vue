@@ -140,7 +140,7 @@ h2 {
 }
 
 .bg {
-  background-color: #005f40;
+  background-color: var(--primary-main-green);
 }
 
 .padded-card {

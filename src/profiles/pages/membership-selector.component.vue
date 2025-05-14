@@ -103,7 +103,7 @@ export default {
 }
 
 .confirm-button {
-  background-color: #005F40;
+  background-color: var(--primary-main-green);
   color: #fff;
   border: none;
   padding: 10px 20px;

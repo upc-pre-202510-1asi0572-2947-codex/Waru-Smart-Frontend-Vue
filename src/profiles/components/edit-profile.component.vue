@@ -174,7 +174,7 @@ export default {
   background-color: #FF3439;
 }
 .green-button {
-  background-color: #005f40;
+  background-color: var(--primary-main-green);
 }
 
 .check-button {
