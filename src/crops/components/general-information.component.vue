@@ -139,4 +139,20 @@ export default {
   text-align: center;
   border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-container {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .labels-container {
+    margin-left: 0;
+  }
+}
 </style>

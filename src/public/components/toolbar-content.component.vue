@@ -62,6 +62,9 @@ export default {
   justify-content: space-between;
 }
 
+.p-toolbar{
+  width: 100vw;
+}
 
 .user {
     display: flex;

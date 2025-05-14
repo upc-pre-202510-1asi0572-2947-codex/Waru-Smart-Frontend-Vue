@@ -113,6 +113,18 @@ export default {
   justify-content: space-between;
 }
 
+@media (max-width: 768px) {
+  .card-container {
+    justify-content: center;
+    margin-left: 0px;
+  }
+  .padded-card {
+    margin-left: 0px !important;
+    /*width: 100%;*/
+  }
+}
+
+
 h2 {
   color: #ffff;
   font-size: 1.5rem;

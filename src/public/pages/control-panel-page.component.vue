@@ -92,7 +92,14 @@ export default {
 <style scoped>
 .main-container {
   display: flex;
-  margin-top:8em;
+  /*margin-top:8em;*/
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    /*margin-top:8em;*/
+  }
 }
 
 .left-container,

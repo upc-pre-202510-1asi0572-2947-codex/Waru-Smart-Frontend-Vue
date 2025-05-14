@@ -32,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="sowing-information-management">
     <h2 style="color:black;">{{$t('Sowing information management')}}</h2>
     <pv-tab-view>
       <pv-tab-panel header="General Information">
@@ -53,3 +53,7 @@ export default {
     </pv-tab-view>
   </div>
 </template>
+
+<style scoped>
+
+</style>

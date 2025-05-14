@@ -26,9 +26,18 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 h1{
   color:black;
   font-size: 2.7rem;
   margin-bottom:10%;
+}
+
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column;
+    height: 100vh;
+    justify-content: revert-layer;
+  }
 }
 </style>

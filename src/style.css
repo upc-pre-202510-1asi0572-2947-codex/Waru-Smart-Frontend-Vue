@@ -98,6 +98,15 @@ button:focus-visible {
   justify-content:center;
 }
 
+@media screen and (max-width: 768px) {
+  #app {
+    padding: 0rem;
+  }
+  body {
+    min-height: auto;
+  }
+}
+
 
 .pv-data-table .p-datatable-thead > tr > th {
   background-color: var(--primary-main-green);
