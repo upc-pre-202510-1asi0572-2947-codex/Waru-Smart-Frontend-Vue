@@ -2,11 +2,18 @@
 import { ProfileApiService } from "../service/profile-api.service.js";
 import { Profile } from "../model/profile.entity.js";
 
+
 const profileApiService = new ProfileApiService();
 
 export default {
   data() {
     return {
+      memberships: [
+        { id: 1, name: 'Basic'  },
+        { id: 2, name: 'Regular' },
+        { id: 3, name: 'Premium' }
+      ],
+      currentPlanName: '', // Nombre del plan actual
       newName: '',
       boolName: true,
       newSubscription: '',
@@ -41,16 +48,19 @@ export default {
     };
   },
   mounted() {
-    profileApiService.getProfileById(localStorage.getItem('userId')).then(response => {
+    const userId = localStorage.getItem('userId');
+    profileApiService.getUserProfileById(userId).then(response => {
       const prof = response.data;
       this.newName = prof.fullName;
       this.newEmail = prof.email;
       this.newCountry = prof.countryId;
       this.newCity = prof.cityId;
       this.newSubscription = prof.subscriptionId;
-      this.updateCities(this.newCountry); // Update cities when the profile is loaded
+      this.updateCities(this.newCountry);
+      const currentPlan = this.memberships.find(plan => plan.id === this.newSubscription);
+      this.currentPlanName = currentPlan ? currentPlan.name : 'Unknown Plan';// Actualiza las ciudades cuando se carga el perfil
     }).catch(error => {
-      console.error('Error getting prof:', error);
+      console.error('Error obteniendo el perfil del usuario:', error);
     });
   },
   watch: {
@@ -59,6 +69,14 @@ export default {
     }
   },
   methods: {
+    changeSubscription() {
+      this.boolSubscription = false;
+    },
+    saveSubscriptionChange(newSubscription) {
+      const currentPlan = this.memberships.find(plan => plan.id === newSubscription);
+      this.currentPlanName = currentPlan ? currentPlan.name : 'Unknown Plan';
+      this.boolSubscription = true;
+    },
     saveNameChange(newName) {
       this.boolName = true;
     },
@@ -70,7 +88,7 @@ export default {
       if (emailRegex.test(newEmail)) {
         this.boolEmail = true;
       } else {
-        alert('Please enter a valid email address');
+        alert('Por favor, ingresa una dirección de correo válida');
       }
     },
     changeEmail() {
@@ -104,7 +122,7 @@ export default {
         this.$router.push('/control-panel');
         alert('¡Actualización exitosa!');
       }).catch(error => {
-        console.error('Error getting prof:', error);
+        console.error('Error actualizando el perfil:', error);
         alert('Error al actualizar.');
       });
     },
@@ -119,46 +137,90 @@ export default {
 </script>
 
 <template>
-  <div class="smaller-div" v-if="true">
-    <pv-card class="highlighted-border">
+  <div class="profile-wrapper">
+    <pv-card class="profile-card">
       <template #title>
         <div class="profile-header">
-          <br>
-          <h2 class="black">{{$t('myProfile')}}</h2>
+          <h1 class="profile-title">{{ $t('myProfile') }}</h1>
         </div>
       </template>
       <template #content>
         <div class="profile-content">
-          <div class="profile-image">
-            <img class="rounded-full large-image" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
+          <!-- Columna de la imagen -->
+          <div class="profile-image-column">
+            <img class="profile-avatar" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
           </div>
-          <div class="profile-details">
-            <h3>{{$t('name')}}:</h3>
-            <pv-input-text v-model="newName" :disabled="boolName" />
-            <pv-button class="green-button check-button" v-if="!boolName" @click="saveNameChange(newName)">{{$t('check')}}</pv-button>
-            <br>
-            <pv-button class="change-data-button" @click="changeName()"> {{$t('change')}} {{$t('name')}}</pv-button>
-            <pv-divider/>
-            <h3>{{$t('email')}}:</h3>
-            <pv-input-text v-model="newEmail" :disabled="boolEmail" />
-            <pv-button class="green-button check-button" v-if="!boolEmail" @click="saveEmailChange(newEmail)">{{$t('check')}}</pv-button>
-            <br>
-            <pv-button class="change-data-button" @click="changeEmail()">{{$t('change')}} {{$t('email')}}</pv-button>
-            <pv-divider/>
-            <h3>{{$t('country')}}:</h3>
-            <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" :disabled="boolCountry" />
-            <pv-button class="green-button check-button" v-if="!boolCountry" @click="saveCountryChange(newCountry)">{{$t('check')}}</pv-button>
-            <br>
-            <pv-button class="change-data-button" @click="changeCountry()">{{$t('change')}} {{$t('country')}}</pv-button>
-            <pv-divider/>
-            <h3>{{$t('city')}}:</h3>
-            <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" :disabled="boolCity" />
-            <pv-button class="green-button check-button" v-if="!boolCity" @click="saveCityChange(newCity)">{{$t('check')}}</pv-button>
-            <br>
-            <pv-button class="change-data-button" @click="changeCity()">{{$t('change')}} {{$t('city')}}</pv-button>
-            <pv-divider/>
-            <pv-button class="green-button" @click="confirmApply">{{$t('apply')}}</pv-button>
-            <pv-button class="red-button" @click="signOut()">{{$t('signOut')}}</pv-button>
+
+          <!-- Columna de los formularios -->
+          <div class="profile-form-column">
+            <!-- Fila de Nombre y Email -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">{{ $t('name') }}:</label>
+                <div class="input-group">
+                  <pv-input-text v-model="newName" :disabled="boolName" class="form-input" />
+                  <pv-button v-if="!boolName" class="check-button" @click="saveNameChange(newName)">{{ $t('check') }}</pv-button>
+                  <pv-button v-else class="change-button" @click="changeName()">{{ $t('change') }}</pv-button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('email') }}:</label>
+                <div class="input-group">
+                  <pv-input-text v-model="newEmail" :disabled="boolEmail" class="form-input" />
+                  <pv-button v-if="!boolEmail" class="check-button" @click="saveEmailChange(newEmail)">{{ $t('check') }}</pv-button>
+                  <pv-button v-else class="change-button" @click="changeEmail()">{{ $t('change') }}</pv-button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Línea divisoria -->
+            <hr class="divider" />
+
+            <!-- Fila de País y Ciudad -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">{{ $t('country') }}:</label>
+                <div class="input-group">
+                  <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" :disabled="boolCountry" class="form-input" />
+                  <pv-button v-if="!boolCountry" class="check-button" @click="saveCountryChange(newCountry)">{{ $t('check') }}</pv-button>
+                  <pv-button v-else class="change-button" @click="changeCountry()">{{ $t('change') }}</pv-button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('city') }}:</label>
+                <div class="input-group">
+                  <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" :disabled="boolCity" class="form-input" />
+                  <pv-button v-if="!boolCity" class="check-button" @click="saveCityChange(newCity)">{{ $t('check') }}</pv-button>
+                  <pv-button v-else class="change-button" @click="changeCity()">{{ $t('change') }}</pv-button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('Current plan') }}:</label>
+                <div class="input-group">
+                  <pv-input-text
+                      v-model="currentPlanName"
+                      :disabled="true"
+                      class="form-input"
+                  />
+                  <pv-button v-if="!boolSubscription" class="check-button" @click="saveSubscriptionChange(newSubscription)">
+                    {{ $t('check') }}
+                  </pv-button>
+                  <pv-button v-else class="change-button" @click="changeSubscription()">
+                    {{ $t('change') }}
+                  </pv-button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="button-container">
+              <pv-button class="apply-button" @click="confirmApply">{{ $t('apply') }}</pv-button>
+              <pv-button class="signout-button" @click="signOut()">{{ $t('signOut') }}</pv-button>
+            </div>
           </div>
         </div>
       </template>
@@ -167,54 +229,139 @@ export default {
 </template>
 
 <style scoped>
-.highlighted-border {
-  border: 2px solid #000;
-}
-.red-button {
-  background-color: #FF3439;
-}
-.green-button {
-  background-color: #005f40;
+.profile-wrapper {
+  width: 1000%;
+  max-width: 1000px;
+  margin: 20px auto;
 }
 
-.check-button {
-  margin-left: 10px;
+.profile-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
-.change-data-button {
-  background-color: #ffffff;
-  color: #465aed;
-  margin: 10px;
+.profile-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  background-color: #f8f9fa;
 }
 
-.smaller-div {
-  width: 55rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 20px;
-  display: block;
-}
-
-.large-image {
-  height: 250px;
-  width: 250px;
-  border-radius: 50%;
-}
-
-.black{
-  color: black;
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
 }
 
 .profile-content {
   display: flex;
-  justify-content: space-between;
+  padding: 20px;
+  gap: 30px;
 }
 
-.profile-image {
+.profile-image-column {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0;
+}
+
+.profile-form-column {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.profile-details {
-  flex: 2;
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.check-button {
+  background-color: #005f40;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.change-button {
+  background-color: #ffffff;
+  color: #465aed;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 0;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.apply-button {
+  background-color: #005f40;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+}
+
+.signout-button {
+  background-color: #FF3439;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
 }
 </style>

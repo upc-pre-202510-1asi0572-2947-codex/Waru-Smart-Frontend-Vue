@@ -72,33 +72,63 @@ export default {
 </script>
 
 <template>
-  <div class="smaller-div">
-    <pv-card class="highlighted-border">
+  <div class="profile-wrapper">
+    <pv-card class="profile-card">
       <template #title>
         <div class="profile-header">
-          <br>
-          <h2 class="black">{{$t('createProfile')}}</h2>
+          <h1 class="profile-title">{{ $t('createProfile') }}</h1>
         </div>
       </template>
       <template #content>
         <div class="profile-content">
-          <div class="profile-image">
-            <img class="rounded-full large-image" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
+          <!-- Columna de la imagen -->
+          <div class="profile-image-column">
+            <img class="profile-avatar" alt="avatar" src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
           </div>
-          <div class="profile-details">
-            <h3>{{$t('name')}}:</h3>
-            <pv-input-text v-model="newName" />
-            <pv-divider/>
-            <h3>{{$t('email')}}:</h3>
-            <pv-input-text v-model="newEmail" />
-            <pv-divider/>
-            <h3>{{$t('country')}}:</h3>
-            <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" style="width:150px"/>
-            <pv-divider/>
-            <h3>{{$t('city')}}:</h3>
-            <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" style="width:150px"/>
-            <pv-divider/>
-            <pv-button class="green-button" @click="confirmApply">{{$t('apply')}}</pv-button>
+
+          <!-- Columna de los formularios -->
+          <div class="profile-form-column">
+            <!-- Fila de Nombre y Email -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">{{ $t('name') }}:</label>
+                <div class="input-group">
+                  <pv-input-text v-model="newName" class="form-input" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('email') }}:</label>
+                <div class="input-group">
+                  <pv-input-text v-model="newEmail" class="form-input" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Línea divisoria -->
+            <hr class="divider" />
+
+            <!-- Fila de País y Ciudad -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">{{ $t('country') }}:</label>
+                <div class="input-group">
+                  <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id" class="form-input" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('city') }}:</label>
+                <div class="input-group">
+                  <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id" class="form-input" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Botón de acción -->
+            <div class="button-container">
+              <pv-button class="apply-button" @click="confirmApply">{{ $t('apply') }}</pv-button>
+            </div>
           </div>
         </div>
       </template>
@@ -107,43 +137,113 @@ export default {
 </template>
 
 <style scoped>
-.highlighted-border {
-  border: 2px solid #000;
-}
-.red-button {
-  background-color: #FF3439;
-}
-.green-button {
-  background-color: #005f40;
-}
-.smaller-div {
-  width: 55rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 20px;
-  display: block;
+.profile-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
 }
 
-.large-image {
-  height: 250px;
-  width: 250px;
-  border-radius: 50%;
+.profile-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
-.black{
-  color: black;
+.profile-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
 }
 
 .profile-content {
   display: flex;
-  justify-content: space-between;
+  padding: 20px;
+  gap: 30px;
 }
 
-.profile-image {
+.profile-image-column {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0;
+}
+
+.profile-form-column {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.profile-details {
-  flex: 2;
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 0;
+}
+
+.button-container {
+  display: flex;
+  margin-top: 10px;
+}
+
+.apply-button {
+  background-color: #005f40;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
 }
 </style>
