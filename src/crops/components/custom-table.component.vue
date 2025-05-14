@@ -41,7 +41,7 @@ export default {
 }
 
 .header {
-  background-color: #005f40;
+  background-color: var(--primary-main-green);
   color: white;;
 }
 
