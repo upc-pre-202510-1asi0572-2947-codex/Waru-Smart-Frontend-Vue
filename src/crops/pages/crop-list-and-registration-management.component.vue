@@ -320,6 +320,10 @@ onPhaseChangeConfirmed() {
 
 
 <template>
+  <div class="section-title">
+    <h2>{{$t('Crops in Progress')}}</h2>
+  </div>
+
   <div class="crop-filter-container">
     <pv-button
         v-for="crop in crops"
@@ -331,7 +335,7 @@ onPhaseChangeConfirmed() {
   </div>
 
   <div class="section-title">
-    <h2>{{$t('listCrops')}}</h2>
+    <h2>{{$t('List of Sowings in Progress')}}</h2>
   </div>
 
   <div>

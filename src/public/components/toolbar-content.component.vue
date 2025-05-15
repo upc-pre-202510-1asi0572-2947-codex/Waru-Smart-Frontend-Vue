@@ -44,7 +44,9 @@ export default {
     </template>
 
     <template #end>
-      <router-link v-if="showProfileIcon" to="/user-profile-edit">
+      <router-link
+          v-if="showProfileIcon"
+          :to="`/user-profile-edit/${authenticationStore.username || 'default-user'}`">
         <pv-button class="toolbar-section user" :Ripple="false">
           <i class="pi pi-user" style="font-size: 2rem"></i>
         </pv-button>

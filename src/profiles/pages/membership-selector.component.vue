@@ -16,13 +16,13 @@
           </p>
         </template>
         <template #content>
-          <p>{{ membership.description }}</p>
-          <p><strong>$ {{ membership.price }} /month</strong></p>
+          <p v-html="membership.description.replace(/\n/g, '<br>')"></p>
+          <p><strong>$ {{ membership.price }}</strong></p>
         </template>
       </pv-card>
     </div>
 
-    <div class="selected-details" v-if="selectedMembership.id !== 0">
+    <div class="selected-details" v-if="selectedMembership.id !== 0 && selectedMembership.id !== profileSubscriptionId">
       <h2>Subscription selected</h2>
       <p><strong>{{ selectedMembership.name }}</strong></p>
       <p>{{ selectedMembership.description }}</p>
@@ -40,11 +40,26 @@ export default {
     return {
       profileSubscriptionId: null, // Aquí se almacenará el subscriptionId del usuario
       memberships: [
-        {id: 1, name: 'Basic', description: 'Registration of 5 crops. Process monitoring', price: '2.99'},
-        {id: 2, name: 'Regular', description: 'Basic plan benefits but with 15 crops. Statistical graphs on agricultural production', price: '7.99'},
-        {id: 3, name: 'Premium', description: 'Regular benefits but with unlimited crops. Customization of alerts according to user needs', price: '14.99'}
+        {
+          id: 1,
+          name: 'Basic Package',
+          description: 'Includes:\n• 1 Soil Sensor\n• 1 Smart Valve\n• Mobile App Access\n• 1-Year Support',
+          price: '149'
+        },
+        {
+          id: 2,
+          name: 'Standard Package',
+          description: 'Includes:\n• 3 Soil Sensors\n• 2 Smart Valves\n• Web & Mobile Access\n• 2-Year Support',
+          price: '399'
+        },
+        {
+          id: 3,
+          name: 'Premium Package',
+          description: 'Includes:\n• 6 Sensors (Soil, Temp, Humidity)\n• 4 Smart Controllers + Gateway\n• Full Dashboard Integration\n• 3-Year Remote Support',
+          price: '599'
+        }
       ],
-      selectedMembership: {id: 0, name: '', description: '', price: ''},
+      selectedMembership: { id: 0, name: '', description: '', price: '' },
       colors: ["#005F40", "#9D7C58", "#9A5D4E"]
     };
   },
@@ -60,6 +75,10 @@ export default {
 
   methods: {
     selectMembership(membership) {
+      if (membership.id === this.profileSubscriptionId) {
+        alert('Este ya es tu plan actual. Por favor, selecciona un plan diferente.');
+        return;
+      }
       this.selectedMembership = Object.assign({}, membership); // Copia el objeto de membresía
     },
     confirmSelection() {

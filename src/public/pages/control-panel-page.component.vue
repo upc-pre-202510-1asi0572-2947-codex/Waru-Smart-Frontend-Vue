@@ -7,7 +7,7 @@ export default {
     return {
       items: [
         { label: 'Statistical Reports', to: '/sowing-statistics-reports' },
-        { label: 'Crop Registration', to: '/crop-list-and-registration' },
+        { label: 'Crop Registration', to: '/crop-list/registration' },
         { label: 'Consultation forum', to: '/consultation-forum' },
         { label: 'Crop History', to: '/crop-history' }
       ],

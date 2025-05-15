@@ -1,18 +1,22 @@
 <script>
 import { SowingsDevicesApiService } from "../services/sowing-devices-api.service.js";
 import AddDevicesDialog from "./add-devices-dialog.component.vue";
+import UpdateDevicesDialog from "./update-devices-dialog.component.vue";
 
 export default {
   name: "IoT",
   props: ["sowingId"],
   components: {
     AddDevicesDialog,
+    UpdateDevicesDialog,
   },
   data() {
     return {
       devices: [],
       loading: true,
       error: null,
+      selectedDevice: null, // Dispositivo seleccionado para actualizar
+      showUpdateDialog: false, // Controla la visibilidad del diálogo de actualización
     };
   },
   methods: {
@@ -55,14 +59,28 @@ export default {
     openAddDeviceDialog() {
       this.$refs.addDialog.showDialog = true;
     },
+    updateDeviceInList(updatedDevice) {
+      const index = this.devices.findIndex(device => device.id === updatedDevice.id);
+      if (index !== -1) {
+        this.devices.splice(index, 1, updatedDevice); // Reemplaza el dispositivo actualizado
+      }
+    },
+    openUpdateDialog(device) {
+      this.selectedDevice = device;
+      this.showUpdateDialog = true;
+    },
+    closeUpdateDialog() {
+      this.showUpdateDialog = false; // Oculta el diálogo de actualización
+      this.selectedDevice = null; // Limpia el dispositivo seleccionado
+    },
     getSensorImage(sensorType) {
       switch (sensorType) {
         case "Humidity":
-          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp"; // Ruta de la imagen para Humidity
+          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp";
         case "Temperature":
-          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg"; // Ruta de la imagen para Temperature
+          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg";
         case "SoilMoisture":
-          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290071/sensores-1_kgqo94.jpg"; // Ruta de la imagen para Soil Moisture
+          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290071/sensores-1_kgqo94.jpg";
         default:
           return "/images/default-sensor.png";
       }
@@ -103,9 +121,12 @@ export default {
             <p><strong>Sensor Type:</strong> {{ device.sensorType || "N/A" }}</p>
             <p>
               <strong>Status:</strong>
-              <span :class="getStatusClass(device.status)">
-          {{ device.status || "N/A" }}
-        </span>
+              <pv-button
+                  :label="device.status || 'N/A'"
+                  :class="getStatusClass(device.status)"
+                  :style="{ padding: '0.2rem 0.5rem', borderRadius: '4px', fontStyle: 'italic' }"
+                  @click="openUpdateDialog(device)"
+              />
             </p>
             <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
             <p><strong>Location:</strong> {{ device.location || "N/A" }}</p>
@@ -130,8 +151,103 @@ export default {
         :sowingId="sowingId"
         @device-added="loadDevices"
     />
+
+    <!-- Diálogo de actualización -->
+    <update-devices-dialog
+        v-model:visible="showUpdateDialog"
+        :device="selectedDevice"
+        @device-updated="updateDeviceInList"
+    />
+
   </div>
 </template>
+
+<style scoped>
+.iot-container {
+  padding: 1rem;
+}
+
+.iot-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+
+
+.iot-card-style {
+  width: 300px;
+  border-radius: 25px;
+  text-align: center;
+  padding: 1rem;
+  border: 2px solid #3E7C59;
+}
+
+.device-name {
+  color: #3E7C59;
+  margin-bottom: 0.5rem;
+}
+
+.iot-info p {
+  margin: 0.2rem 0;
+  color: #333;
+  text-align: left;
+}
+
+.add-device-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 2px dashed #3E7C59;
+  cursor: pointer;
+}
+
+.add-device-content {
+  text-align: center;
+}
+
+.add-icon {
+  font-size: 3rem;
+  color: #3E7C59;
+}
+
+.add-text {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: #3E7C59;
+  font-weight: bold;
+}
+
+.sensor-image {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.status-active {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-inactive {
+  background-color: #f44336;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-disconnected {
+  background-color: #9e9e9e;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+</style>
 
 <style scoped>
 .iot-container {

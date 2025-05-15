@@ -9,9 +9,9 @@ export default {
   data() {
     return {
       memberships: [
-        {id: 1, name: 'Basic'},
-        {id: 2, name: 'Regular'},
-        {id: 3, name: 'Premium'}
+        {id: 1, name: 'Basic Package'},
+        {id: 2, name: 'Standard Package'},
+        {id: 3, name: 'Premium Package'}
       ],
       currentPlanName: '',
       newName: '',
@@ -48,6 +48,8 @@ export default {
     };
   },
   mounted() {
+    const username = this.$route.params.username;
+    console.log('Nombre completo del usuario:', username);
     const userId = localStorage.getItem('userId');
     profileApiService.getUserProfileById(userId).then(response => {
       const prof = response.data;
@@ -69,6 +71,9 @@ export default {
     }
   },
   methods: {
+    redirectToMembershipSelector() {
+      this.$router.push({ name: 'membership-selector' });
+    },
     changeSubscription() {
       this.boolSubscription = false;
     },
@@ -223,7 +228,7 @@ export default {
                              @click="saveSubscriptionChange(newSubscription)">
                     {{ $t('check') }}
                   </pv-button>
-                  <pv-button v-else class="change-button" @click="changeSubscription()">
+                  <pv-button v-else class="change-button" @click="redirectToMembershipSelector">
                     {{ $t('change') }}
                   </pv-button>
                 </div>
