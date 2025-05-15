@@ -8,8 +8,6 @@ export default {
       items: [
         { label: 'Statistical Reports', to: '/sowing-statistics-reports' },
         { label: 'Crop Registration', to: '/crop-list/registration' },
-        { label: 'Consultation forum', to: '/consultation-forum' },
-        { label: 'Crop History', to: '/crop-history' }
       ],
       recommendedCrop: null
     }
@@ -28,16 +26,6 @@ export default {
 <template>
   <div class="main-container">
     <div class="left-container">
-      <pv-card class="justify-content-center mt-2">
-        <template #content>
-          <i class="pi pi-chart-bar icon-large"></i>
-        </template>
-        <template #footer>
-          <router-link :to="items[0].to"  rel="noopener">
-            <pv-button class="button-green" :label="items[0].label" />
-          </router-link>
-        </template>
-      </pv-card>
 
       <pv-card class="justify-content-center mt-2">
         <template #content>
@@ -52,22 +40,11 @@ export default {
 
       <pv-card class="justify-content-center mt-2">
         <template #content>
-          <i class="pi pi-comments icon-large"></i>
+          <i class="pi pi-chart-bar icon-large"></i>
         </template>
         <template #footer>
-          <router-link :to="items[2].to"  rel="noopener">
-            <pv-button class="button-green" :label="items[2].label" />
-          </router-link>
-        </template>
-      </pv-card>
-
-      <pv-card class="justify-content-center mt-2">
-        <template #content>
-          <i class="pi pi-history icon-large"></i>
-        </template>
-        <template #footer>
-          <router-link :to="items[3].to"  rel="noopener">
-            <pv-button class="button-green" :label="items[3].label" />
+          <router-link :to="items[0].to"  rel="noopener">
+            <pv-button class="button-green" :label="items[0].label" />
           </router-link>
         </template>
       </pv-card>
@@ -92,7 +69,9 @@ export default {
 <style scoped>
 .main-container {
   display: flex;
-  /*margin-top:8em;*/
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 90vh; /* Ocupa toda la altura de la pantalla */
 }
 
 @media (max-width: 768px) {
@@ -100,6 +79,13 @@ export default {
     flex-direction: column;
     /*margin-top:8em;*/
   }
+}
+
+.left-container {
+  display: flex;
+  flex-direction: column; /* Asegura que las tarjetas estén en columna */
+  align-items: center; /* Centra las tarjetas horizontalmente */
+  gap: 1rem; /* Espaciado entre las tarjetas */
 }
 
 .left-container,
@@ -129,6 +115,16 @@ export default {
   background-color: #3E7C59;
   color: #ffffff;
   border-radius: 25px;
+}
+.pv-card {
+  width: 300px; /* Ajusta el ancho de las tarjetas */
+  height: 200px; /* Ajusta el alto de las tarjetas */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Espaciado entre contenido y pie */
+  align-items: center;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: sombra para mejor apariencia */
 }
 
 </style>

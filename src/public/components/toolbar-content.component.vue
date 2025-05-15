@@ -35,9 +35,14 @@ export default {
             <p>{{ $t('toolbarControlPanel') }}</p>
           </pv-button>
         </router-link>
-        <router-link to="/crop-list-and-registration">
+        <router-link to="/crop-history">
           <pv-button class="bg-transparent mr-4">
-            <p>{{ $t('toolbarCropsRegistration') }}</p>
+            <p>{{ $t('Crop Histoty') }}</p>
+          </pv-button>
+        </router-link>
+        <router-link to="/consultation-forum">
+          <pv-button class="bg-transparent mr-4">
+            <p>{{ $t('Consultation Forum') }}</p>
           </pv-button>
         </router-link>
       </div>

@@ -188,7 +188,10 @@ export default {
   <pv-toast/>
   <pv-confirm-dialog/>
   <div>
-    <h2 style="color:black;">{{$t('consultationForum')}}</h2>
+    <h2 style="color:black;">
+      {{$t('consultationForum')}}
+      <i class="pi pi-comments icon-large" style="font-size: 2rem; margin-left: 0.5rem;"></i>
+    </h2>
     <pv-button class="pv-button button-brown" label="Ask your colleagues!" @click="onNewItemEventHandler" />
     <pv-tab-view>
       <pv-tab-panel header="Community">
