@@ -8,14 +8,14 @@
         name: 'crop-history',
         data() {
           return {
-            sowings: [], // Lista de sowings
-            selectedSowing: null, // Sowing seleccionado
-            selectedSowingDetailsVisible: false, // Controla la visibilidad del diálogo
-            filters: {}, // Filtros para la tabla
-            sowingService: null, // Servicio de sowings
-            crop: null, // Información del cultivo
-            rows: [], // Datos del sowing para mostrar en el diálogo
-            isUnmounted: false, // Controla si el componente está desmontado
+            sowings: [],
+            selectedSowing: null,
+            selectedSowingDetailsVisible: false,
+            filters: {},
+            sowingService: null,
+            crop: null,
+            rows: [],
+            isUnmounted: false,
           };
         },
         methods: {
@@ -191,32 +191,30 @@ async loadSowings() {
         </div>
       </template>
 
-      <style scoped>
-      .table-margin {
-        margin-top: 20px;
-      }
-      .dialog-image {
-        width: 50%;
-        height: auto;
-      }
-      .details-table {
-        width: 100%;
-        margin-top: 20px;
-      }
-      .row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-      }
-      .label {
-        font-weight: bold;
-      }
-      .value {
-        color: #555;
-      }
-      .close-button {
-        margin-top: 20px;
-        background-color: black;
-        color: white;
-      }
-      </style>
+<style scoped>
+
+.dialog-image {
+  width: 50%;
+  height: auto;
+}
+.details-table {
+  width: 100%;
+  margin-top: 20px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.label {
+  font-weight: bold;
+}
+.value {
+  color: #555;
+}
+.close-button {
+  margin-top: 20px;
+  background-color: black;
+  color: white;
+}
+</style>

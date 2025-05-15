@@ -61,10 +61,10 @@ export const useAuthenticationStore = defineStore({
             this.userId = 0;
             this.username = '';
 
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('username');
+            // Limpia todo el localStorage
+            localStorage.clear();
 
+            // Redirige al usuario a la página de inicio de sesión
             router.push({ name: 'sign-in' });
         },
     },

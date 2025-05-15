@@ -7,8 +7,6 @@ import QuestionItemCreateAndEditDialog from "../components/question-item-create-
 import SowingItemCreateAndEditDialog from "../../crops/components/sowing-item-create-and-edit-dialog.component.vue";
 import {CategoryApiService} from "../services/category-api.service.js";
 
-
-
 export default {
   name: "forum-management",
   components: {SowingItemCreateAndEditDialog, QuestionItemCreateAndEditDialog, CommunityQuestionList, UserQuestionList},
@@ -16,7 +14,7 @@ export default {
     return {
       questions: [],
       categories: [],
-      profiles:[],
+      profiles: [],
       question: {},
       selectedQuestion: {},
       filters: {},
@@ -32,20 +30,32 @@ export default {
       return this.questions.findIndex((question) => question.id === id);
     },
     createQuestion() {
+      // Obtener el ID del usuario autenticado
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        console.error('No se encontró el ID del usuario autenticado.');
+        return;
+      }
+
+      // Asignar datos a la pregunta
       this.question.date = new Date();
-      this.question.authorId = 1;
+      this.question.authorId = parseInt(userId, 10); // Asegúrate de que sea un número
       this.question = Question.fromDisplayableQuestion(this.question);
-      console.log(this.question);
+
+      // Enviar la pregunta al backend
       this.forumService.createQuestion(this.question)
           .then((response) => {
             let buildItemData = this.buildItemData(response.data);
             this.question = Question.toDisplayableQuestion(buildItemData);
             this.questions.push(this.question);
+          })
+          .catch((error) => {
+            console.error('Error al crear la pregunta:', error);
           });
     },
 
     updateQuestion() {
-       let questionUpdate = {
+      let questionUpdate = {
         categoryId: this.question.categoryId,
         questionText: this.question.ask
       };
@@ -53,23 +63,22 @@ export default {
           .updateQuestion(this.question.id, questionUpdate)
           .then((response) => {
             let buildItemData = this.buildItemData(response.data);
-            console.log(buildItemData);
             let index = this.findIndexById(buildItemData.questionId);
-            console.log(index);
             this.questions.splice(index, 1, Question.toDisplayableQuestion(buildItemData));
+          })
+          .catch((error) => {
+            console.error('Error al actualizar la pregunta:', error);
           });
     },
 
     deleteQuestion() {
-      console.log('Deleting question with ID:', this.question.id);
-
       this.forumService.deleteQuestion(this.question.id)
           .then(() => {
             this.questions = this.questions.filter((s) => s.id !== this.question.id);
             this.question = {};
           })
           .catch((error) => {
-            console.error('Error deleting question:', error);
+            console.error('Error al eliminar la pregunta:', error);
           });
     },
 
@@ -110,33 +119,32 @@ export default {
       this.createAndEditDialogIsVisible = false;
       this.isEdit = false;
     },
-    confirmDeleteQuestion(item){
+    confirmDeleteQuestion(item) {
       this.$confirm.require({
-        message:          `Are you sure you want to delete this Question?`,
-        header:           'Delete Question',
-        icon:             'pi pi-exclamation-triangle',
-        rejectClass:      'button-cancel',
-        rejectLabel:      'Cancel',
-        acceptLabel:      'Delete',
-        acceptClass:      'button-delete',
-        accept:           () => this.onDeleteItemEventHandler(item),
-        reject:           () => {}
+        message: `Are you sure you want to delete this Question?`,
+        header: 'Delete Question',
+        icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'button-cancel',
+        rejectLabel: 'Cancel',
+        acceptLabel: 'Delete',
+        acceptClass: 'button-delete',
+        accept: () => this.onDeleteItemEventHandler(item),
+        reject: () => {}
       });
     },
     buildData() {
-      console.log(this.questions);
       this.questions = this.questions.map((question) => {
         const category = this.categories.find((category) => category.categoryId === question.categoryId);
         const profile = this.profiles.find((profile) => profile.id === question.authorId);
+
         return {
           ...question,
-          category: category?.name,
-          userName: profile?.fullName
+          category: category?.name || 'Categoría desconocida',
+          userName: profile?.fullName || 'Usuario desconocido', // Mapea correctamente el nombre del usuario
         };
       });
-      console.log(this.questions);
     },
-    buildItemData(data){
+    buildItemData(data) {
       const category = this.categories.find((category) => category.categoryId === data.categoryId);
       const profile = this.profiles.find((profile) => profile.id === data.authorId);
 
@@ -145,29 +153,26 @@ export default {
       data.userName = profile?.fullName;
       return data;
     },
-    async getAllQuestions(){
-      await this.forumService.getAllQuestions().then((response) =>{
+    async getAllQuestions() {
+      await this.forumService.getAllQuestions().then((response) => {
         let questions = response.data;
-        console.log(questions);
         this.questions = questions.map((question) => Question.toDisplayableQuestion(question));
       });
       return this.questions;
     },
-    async getAllCategories(){
-      await this.categoryService.getAllCategories().then((response) =>{
+    async getAllCategories() {
+      await this.categoryService.getAllCategories().then((response) => {
         this.categories = response.data;
       });
       return this.categories;
     },
-    async getAllProfiles(){
-      await this.forumService.getAllProfiles().then((response) =>{
+    async getAllProfiles() {
+      await this.forumService.getAllProfiles().then((response) => {
         this.profiles = response.data;
-        console.log(this.profiles);
       });
       return this.profiles;
     }
   },
-
 
   created() {
     this.forumService = new ForumApiService();
@@ -175,7 +180,6 @@ export default {
     Promise.all([this.getAllCategories(), this.getAllQuestions(), this.getAllProfiles()])
         .then(() => {
           this.buildData();
-          console.log('Todas las categorías y preguntas se han cargado');
         })
         .catch((error) => {
           console.error('Error cargando categorías o preguntas:', error);
@@ -204,7 +208,6 @@ export default {
             :confirm-delete-question="confirmDeleteQuestion"
         />
       </pv-tab-panel>
-
     </pv-tab-view>
   </div>
 
@@ -219,7 +222,5 @@ export default {
   />
 </template>
 
-
 <style scoped>
-
 </style>
