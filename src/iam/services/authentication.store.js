@@ -40,14 +40,16 @@ export const useAuthenticationStore = defineStore({
             }
         },
 
-        async signUp(signUpRequest, router) {
+        async signUp(signUpRequest, router, redirectRoute = 'control-panel') {
             try {
                 const response = await authenticationService.signUp(signUpRequest);
                 const signUpResponse = new SignUpResponse(response.data.message);
 
                 console.log(signUpResponse);
 
+                // Llama a signIn y redirige a la ruta especificada
                 await this.signIn(signUpRequest, router);
+                router.push({ name: redirectRoute });
             } catch (error) {
                 console.error(error);
                 router.push({ name: 'sign-up' });

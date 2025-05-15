@@ -11,12 +11,13 @@ export class Profile {
     }
 }
 export class Profile2 {
-    constructor(firstName, lastName, email, cityId, subscriptionId, countryId) {
+    constructor(firstName, lastName, email, cityId, subscriptionId, countryId, userId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.cityId = cityId;
         this.subscriptionId = subscriptionId;
-        this.countryId= countryId;
+        this.countryId = countryId;
+        this.userId = userId;
     }
 }

@@ -117,7 +117,7 @@ export default {
 }
 
 .button-green {
-  background-color: var(--primary-main-green);
+  background-color: #3E7C59;
   color: white;
 }
 .fixed-size-image {
@@ -126,7 +126,7 @@ export default {
   border-radius:25px;
 }
 .card-crop-control{
-  background-color: var(--primary-main-green);
+  background-color: #3E7C59;
   color: #ffffff;
   border-radius: 25px;
 }

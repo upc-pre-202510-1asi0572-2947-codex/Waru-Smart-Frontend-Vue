@@ -7,16 +7,17 @@ const profileApiService = new ProfileApiService();
 export default {
   data() {
     return {
-      newName: '',
-      newSubscription: '',
+      newFirstName: '',
+      newLastName: '',
       newEmail: '',
       newCountry: null,
       newCity: null,
+      newSubscription: 0, // Inicializado explícitamente como 0
       countries: [
-        {id: 1, name: 'Chile', cities: ['Santiago', 'Antofagasta', 'Concepción']},
-        {id: 2, name: 'Colombia', cities: ['Bogotá', 'Barranquilla', 'Medellin']},
-        {id: 3, name: 'Ecuador', cities: ['Guayaquil', 'Quito', 'Cuenca']},
-        {id: 4, name: 'Perú', cities: ['Lima', 'Arequipa', 'Trujillo']},
+        {id: 1, name: 'Chile'},
+        {id: 2, name: 'Colombia'},
+        {id: 3, name: 'Ecuador'},
+        {id: 4, name: 'Perú'},
       ],
       allCities: [
         {id: 1, name: 'Santiago', countryId: 1},
@@ -49,25 +50,60 @@ export default {
         alert('Please enter a valid email address');
       }
     },
-    confirmApply() {
-      const profile = new Profile2(this.newName, '', this.newEmail, this.newCity, this.newCountry, this.newCountry);
-
-      console.log(profile);
-
-      profileApiService.create(profile).then(response => {
-        console.log(response);
-        this.$router.push('/membership-selector');
-      }).catch(error => {
-        console.error('Error getting prof:', error);
-        alert('Error al actualizar.');
-      });
-    },
-    signOut() {
-    },
     updateCities(countryId) {
       this.cities = this.allCities.filter(city => city.countryId === countryId);
+      this.newCity = null; // Resetear ciudad al cambiar país
+    },
+    confirmApply() {
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        alert('No se pudo obtener el ID del usuario. Por favor, inicia sesión nuevamente.');
+        return;
+      }
+
+      // Validación de campos obligatorios
+      if (!this.newFirstName || !this.newLastName || !this.newEmail || !this.newCountry || !this.newCity) {
+        alert('Por favor complete todos los campos obligatorios.');
+        return;
+      }
+
+      // Debug: Verificar valores antes de enviar
+      console.log('Valores seleccionados:', {
+        firstName: this.newFirstName,
+        lastName: this.newLastName,
+        email: this.newEmail,
+        country: this.newCountry,
+        city: this.newCity,
+        subscription: this.newSubscription
+      });
+
+      const profile = new Profile2(
+          this.newFirstName,
+          this.newLastName,
+          this.newEmail,
+          this.newCity,    // cityId (valor numérico)
+          0,               // subscriptionId (siempre 0)
+          this.newCountry, // countryId (valor numérico)
+          userId
+      );
+
+      console.log('Perfil a enviar:', profile);
+
+      profileApiService.create(profile)
+          .then(response => {
+            console.log('Respuesta del servidor:', response);
+            this.$router.push('/membership-selector');
+          })
+          .catch(error => {
+            console.error('Error al crear el perfil:', error);
+            alert('Error al crear el perfil. Verifica la consola para más detalles.');
+          });
+    },
+    signOut() {
+      // Tu lógica de signOut
     }
-  },
+  }
 };
 </script>
 
@@ -89,15 +125,25 @@ export default {
 
           <!-- Columna de los formularios -->
           <div class="profile-form-column">
-            <!-- Fila de Nombre y Email -->
+            <!-- Fila de Nombre y Apellido -->
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">{{ $t('name') }}:</label>
+                <label class="form-label">{{ $t('firstName') }}:</label>
                 <div class="input-group">
-                  <pv-input-text v-model="newName" class="form-input"/>
+                  <pv-input-text v-model="newFirstName" class="form-input"/>
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="form-label">{{ $t('lastName') }}:</label>
+                <div class="input-group">
+                  <pv-input-text v-model="newLastName" class="form-input"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fila de Email -->
+            <div class="form-row">
               <div class="form-group">
                 <label class="form-label">{{ $t('email') }}:</label>
                 <div class="input-group">
@@ -114,16 +160,29 @@ export default {
               <div class="form-group">
                 <label class="form-label">{{ $t('country') }}:</label>
                 <div class="input-group">
-                  <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id"
-                               class="form-input"/>
+                  <pv-dropdown
+                      v-model="newCountry"
+                      :options="countries"
+                      optionLabel="name"
+                      optionValue="id"
+                      placeholder="Selecciona un país"
+                      class="form-input"
+                  />
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="form-label">{{ $t('city') }}:</label>
                 <div class="input-group">
-                  <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id"
-                               class="form-input"/>
+                  <pv-dropdown
+                      v-model="newCity"
+                      :options="cities"
+                      optionLabel="name"
+                      optionValue="id"
+                      placeholder="Selecciona una ciudad"
+                      class="form-input"
+                      :disabled="!newCountry"
+                  />
                 </div>
               </div>
             </div>

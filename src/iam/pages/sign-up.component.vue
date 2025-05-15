@@ -14,7 +14,7 @@ export default {
     onSignUp() {
       let authenticationStore = useAuthenticationStore();
       let signUpRequest = new SignUpRequest(this.username, this.password);
-      authenticationStore.signUp(signUpRequest, this.$router);
+      authenticationStore.signUp(signUpRequest, this.$router, 'user-profile-create');
     }
   }
 }
@@ -79,7 +79,7 @@ export default {
 }
 
 .p-float-label:has(input:focus) label, .p-float-label:has(input.p-filled) label, .p-float-label:has(input:-webkit-autofill) label, .p-float-label:has(textarea:focus) label, .p-float-label:has(textarea.p-filled) label, .p-float-label:has(.p-inputwrapper-focus) label, .p-float-label:has(.p-inputwrapper-filled) label {
-    top: 0rem;
-    font-size: 12px;
+  top: 0rem;
+  font-size: 12px;
 }
 </style>

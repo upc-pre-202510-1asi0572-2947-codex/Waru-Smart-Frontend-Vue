@@ -128,12 +128,12 @@ export default {
 }
 
 .green-label {
-  background-color: var(--primary-main-green);
+  background-color: #3E7C59;
   color: white;
 }
 
 .description {
-  background-color: var(--primary-main-green);
+  background-color: #3E7C59;
   color: white;
   padding: 10px 20px;
   text-align: center;

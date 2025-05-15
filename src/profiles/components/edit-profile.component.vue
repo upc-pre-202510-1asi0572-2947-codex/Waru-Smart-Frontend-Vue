@@ -246,7 +246,6 @@ export default {
 <style scoped>
 .profile-wrapper {
   width: 1000%;
-  max-width: 1000px;
   margin: 20px auto;
 }
 
@@ -255,6 +254,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  width: 10%;
 }
 
 .profile-header {

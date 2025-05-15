@@ -21,3 +21,4 @@ export class ProfileApiService {
         return http.put(`/profiles/${profileId}`, model);
     }
 }
+export default new ProfileApiService();
