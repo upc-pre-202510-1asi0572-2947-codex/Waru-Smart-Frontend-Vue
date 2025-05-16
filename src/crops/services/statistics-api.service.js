@@ -23,5 +23,9 @@ export class StatisticsApiService {
         return await http.get(`/crops-management/sowings/${sowingId}/devices`);
     }
 
+    async getAllDevices() {
+        return await http.get(`/crops-management/sowings/devices`);
+    }
+
 }
 
