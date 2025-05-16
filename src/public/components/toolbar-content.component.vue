@@ -69,26 +69,25 @@ export default {
   justify-content: space-between;
 }
 
-.p-toolbar{
+.p-toolbar {
   width: 100vw;
 }
 
 .user {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-    font-size: 1rem;
-    padding: 0.5rem;
-    height: auto !important;
-    width: auto !important;
+  font-size: 1rem;
+  padding: 0.5rem;
+  height: auto !important;
+  width: auto !important;
   transform: none !important;
 }
 
 .user:active, .user:focus {
   transform: none !important;
 }
-
 
 .fixed-toolbar {
   position: fixed;
@@ -102,10 +101,49 @@ export default {
   display: flex;
   justify-content: space-between;
   background-color: #3E7C59;
+  padding: 1rem;
 }
 
 .center-start {
   display: flex;
   justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .pv-toolbar {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .toolbar-section.center {
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .nav-button {
+    font-size: 0.9rem;
+  }
+
+  .logo {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-button {
+    font-size: 0.8rem;
+  }
+
+  .user-button {
+    font-size: 1rem;
+  }
+
+  .toolbar-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
 }
 </style>
