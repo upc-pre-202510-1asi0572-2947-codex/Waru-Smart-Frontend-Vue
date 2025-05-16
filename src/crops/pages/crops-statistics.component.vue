@@ -2,12 +2,13 @@
 <script>
 import CropsAmountStatsCard from '/src/crops/components/crops-amount-stats-card.component.vue';
 import ControlsByCropStats from '/src/crops/components/controls-by-crop-stats-card.component.vue';
-
+import DeviceTypeGeneralStatisticCard from '/src/crops/components/device-type-general-statistic-card.component.vue';
 export default {
   name: "crops-statistics",
   components: {
-    CropsAmountStatsCard,
-    ControlsByCropStats
+    //CropsAmountStatsCard,
+    //ControlsByCropStats
+    DeviceTypeGeneralStatisticCard
   }
 }
 </script>
@@ -15,8 +16,9 @@ export default {
 <template>
   <h1>{{$t('welcomeStatistics')}}</h1>
   <div class="flex-container">
-    <crops-amount-stats-card />
-    <controls-by-crop-stats />
+    <!--<crops-amount-stats-card />
+    <controls-by-crop-stats /> -->
+    <device-type-general-statistic-card />
   </div>
 </template>
 
