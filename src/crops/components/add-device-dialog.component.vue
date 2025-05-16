@@ -13,6 +13,7 @@ export default {
     return {
       showDialog: false,
       form: {
+        deviceId: "",
         sensorType: "",
         location: "",
         status: "Disconnected", // Estado predeterminado
@@ -81,6 +82,17 @@ export default {
   >
     <div v-if="error" class="error-message">{{ error }}</div>
     <form @submit.prevent="addDevice">
+      <!-- Campo para Device ID -->
+      <div class="form-group">
+        <label for="deviceId">Device ID:</label>
+        <pv-input-text
+            id="deviceId"
+            v-model="form.deviceId"
+            type="text"
+            placeholder="Enter device ID"
+        />
+      </div>
+      <!-- Campo para Sensor Type -->
       <div class="form-group">
         <label for="sensorType">Sensor Type:</label>
         <pv-dropdown
@@ -92,6 +104,7 @@ export default {
             placeholder="Select a sensor type"
         />
       </div>
+      <!-- Campo para Location -->
       <div class="form-group">
         <pv-label for="location">Location:</pv-label>
         <pv-input-text id="location" v-model="form.location" type="text" placeholder="Example: center"/>
