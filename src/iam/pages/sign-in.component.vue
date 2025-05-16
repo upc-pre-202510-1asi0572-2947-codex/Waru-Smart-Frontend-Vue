@@ -61,12 +61,27 @@ export default {
   gap: 20px;
 }
 .auth-button {
-  background-color: #005f40;
+  background-color: #3E7C59;
   padding: 10px 20px;
   color: white;
 }
 
 .login-card{
+}
 
+.p-float-label{
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  min-width: 30vw;
+}
+
+.p-float-label label{
+  margin-top: -1rem;
+}
+
+.p-float-label:has(input:focus) label, .p-float-label:has(input.p-filled) label, .p-float-label:has(input:-webkit-autofill) label, .p-float-label:has(textarea:focus) label, .p-float-label:has(textarea.p-filled) label, .p-float-label:has(.p-inputwrapper-focus) label, .p-float-label:has(.p-inputwrapper-filled) label {
+    top: 0rem;
+    font-size: 12px;
 }
 </style>

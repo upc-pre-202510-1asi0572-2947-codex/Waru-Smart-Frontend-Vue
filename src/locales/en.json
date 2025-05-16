@@ -45,5 +45,7 @@
   "usernameRequired": "Username is required",
   "passwordRequired": "Password is required",
   "signIn": "Sign In",
-  "signUp": "Sign Up"
+  "signUp": "Sign Up",
+  "Welcome":"Welcome",
+  "DeviceTypeUsed": "Device Type Used at WaruSmart"
 }

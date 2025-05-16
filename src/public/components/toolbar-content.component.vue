@@ -35,16 +35,23 @@ export default {
             <p>{{ $t('toolbarControlPanel') }}</p>
           </pv-button>
         </router-link>
-        <router-link to="/crop-list-and-registration">
+        <router-link to="/crop-history">
           <pv-button class="bg-transparent mr-4">
-            <p>{{ $t('toolbarCropsRegistration') }}</p>
+            <p>{{ $t('Crop Histoty') }}</p>
+          </pv-button>
+        </router-link>
+        <router-link to="/consultation-forum">
+          <pv-button class="bg-transparent mr-4">
+            <p>{{ $t('Consultation Forum') }}</p>
           </pv-button>
         </router-link>
       </div>
     </template>
 
     <template #end>
-      <router-link v-if="showProfileIcon" to="/user-profile-edit">
+      <router-link
+          v-if="showProfileIcon"
+          :to="`/user-profile-edit/${authenticationStore.username || 'default-user'}`">
         <pv-button class="toolbar-section user" :Ripple="false">
           <i class="pi pi-user" style="font-size: 2rem"></i>
         </pv-button>
@@ -62,6 +69,9 @@ export default {
   justify-content: space-between;
 }
 
+.p-toolbar{
+  width: 100vw;
+}
 
 .user {
     display: flex;

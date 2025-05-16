@@ -22,7 +22,8 @@ export default {
       dialogStyle = this.size === 'standard' ? { width: '600px'} : defaultStyle;
       dialogStyle = this.size === 'large' ? { width: '900px'} : defaultStyle;
       return dialogStyle;
-    }
+    },
+
 
   }
 }

@@ -29,4 +29,12 @@ export default {
 .content-container {
   margin-top: 64px;
 }
+
+@media (max-width: 768px) {
+  .content-container {
+    margin-top: 250px;
+    width: 100vw;
+    padding: 20px;
+  }
+}
 </style>

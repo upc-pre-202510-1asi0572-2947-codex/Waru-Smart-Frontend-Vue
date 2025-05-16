@@ -17,19 +17,19 @@ import {authenticationGuard} from "../iam/services/authentication.guard.js";
 
 
 const routes = [
-    { path: '/', redirect: '/home'},
-    { path: '/sign-in', name: 'sign-in',    component: SignInComponent,             meta: { title: 'Sign In' } },
-    { path: '/sign-up', name: 'sign-up',    component: SignUpComponent,             meta: { title: 'Sign Up' } },
-    { path: '/user-profile-edit', name: 'user-profile-edit', component: UserProfileEditPageComponent},
-    { path: '/user-profile-create', name: 'user-profile-create', component: UserProfileCreatePageComponent },
-    { path: '/membership-selector', name: 'membership-selector', component: MembershipSelectorComponent },
-    { path: '/sowing-statistics-reports', component: CropsStatisticsComponent },
-    { path: '/control-panel',name: 'control-panel', component: ControlPanelPageComponent},
-    { path:'/crop-list-and-registration',component: CropListAndRegistrationManagementComponent},
-    { path: '/crop/:cropId/sowing/:sowingId', name: 'crop-information', component: CropInformationManagementComponent },
-    { path: '/crop-history', component: HistoryTableComponent },
-    { path: '/consultation-forum',component: ForumManagementComponent },
-    { path: '/:pathMatch(.*)*', component: PageNotFoundComponent }
+    { path: '/', redirect: '/home', name: 'home-redirect', meta: { title: 'Home' } },
+    { path: '/sign-in', name: 'sign-in', component: SignInComponent, meta: { title: 'Sign In' } },
+    { path: '/sign-up', name: 'sign-up', component: SignUpComponent, meta: { title: 'Sign Up' } },
+    { path: '/user-profile-edit/:username', name: 'user-profile-edit', component: UserProfileEditPageComponent, meta: { title: 'Edit Profile' } },
+    { path: '/user-profile-create', name: 'user-profile-create', component: UserProfileCreatePageComponent, meta: { title: 'Create Profile' } },
+    { path: '/membership-selector', name: 'membership-selector', component: MembershipSelectorComponent, meta: { title: 'Membership Selector' } },
+    { path: '/sowing-statistics-reports', name: 'sowing-statistics-reports', component: CropsStatisticsComponent, meta: { title: 'Sowing Statistics' } },
+    { path: '/control-panel', name: 'control-panel', component: ControlPanelPageComponent, meta: { title: 'Control Panel' } },
+    { path: '/crop-list/registration', name: 'crop-list-registration', component: CropListAndRegistrationManagementComponent, meta: { title: 'Crop Registration' } },
+    { path: '/crop/:cropId/sowing/:sowingId/:tab?', name: 'crop-information', component: CropInformationManagementComponent, meta: { title: 'Crop Information' } },
+    { path: '/crop-history', name: 'crop-history', component: HistoryTableComponent, meta: { title: 'Crop History' } },
+    { path: '/consultation-forum', name: 'consultation-forum', component: ForumManagementComponent, meta: { title: 'Consultation Forum' } },
+    { path: '/:pathMatch(.*)*', name: 'page-not-found', component: PageNotFoundComponent, meta: { title: 'Page Not Found' } }
 ];
 
 const router = createRouter({

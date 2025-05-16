@@ -15,9 +15,17 @@ export class StatisticsApiService {
         return http.get(`/crops-management/sowings/${sowingId}/controls`);
     }
 
+    getByUserId(userId) {
+        return http.get(`/crops-management/sowings/${userId}/user`);
+    }
 
+    async getDevicesBySowingId(sowingId) {
+        return await http.get(`/crops-management/sowings/${sowingId}/devices`);
+    }
 
-
+    async getAllDevices() {
+        return await http.get(`/crops-management/sowings/devices`);
+    }
 
 }
 

@@ -1,8 +1,8 @@
 :root {
-  --primary-main-green: #005f40;
+  --primary-main-green: #3e7c59;
   --primary-main-white: #ffffff;
   --secondary-green:#337d50;
-  --dark-brown:#743e31;
+  --dark-brown:#8E6E53;
   --light-brown:#9a5d4e;
   --olive-drav-color:#9d7c58;
 
@@ -96,6 +96,15 @@ button:focus-visible {
   padding: 2rem;
   text-align: center;
   justify-content:center;
+}
+
+@media screen and (max-width: 768px) {
+  #app {
+    padding: 0rem;
+  }
+  body {
+    min-height: auto;
+  }
 }
 
 

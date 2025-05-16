@@ -12,4 +12,13 @@ export class ProfileApiService {
     getProfileById(id){
         return http.get(`/profiles/${id}`)
     }
+
+    getUserProfileById(userId) {
+        return http.get(`/profiles/${userId}/user`);
+    }
+
+    updateProfile(profileId, model) {
+        return http.put(`/profiles/${profileId}`, model);
+    }
 }
+export default new ProfileApiService();
