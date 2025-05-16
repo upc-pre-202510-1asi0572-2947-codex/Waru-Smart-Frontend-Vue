@@ -2,57 +2,51 @@
 import { ProfileApiService } from "../service/profile-api.service.js";
 import { Profile } from "../model/profile.entity.js";
 
-
 const profileApiService = new ProfileApiService();
 
 export default {
   data() {
     return {
       memberships: [
-        {id: 1, name: 'Basic Package'},
-        {id: 2, name: 'Standard Package'},
-        {id: 3, name: 'Premium Package'}
+        { id: 1, name: 'Basic Package' },
+        { id: 2, name: 'Standard Package' },
+        { id: 3, name: 'Premium Package' }
       ],
       currentPlanName: '',
       newName: '',
-      boolName: true,
-      newSubscription: '',
-      boolSubscription: true,
       newEmail: '',
-      boolEmail: true,
       newCountry: null,
-      boolCountry: true,
       newCity: null,
-      boolCity: true,
+      newSubscription: '',
+      isEditable: false,
       countries: [
-        {id: 1, name: 'Chile', cities: ['Santiago', 'Antofagasta', 'Concepción']},
-        {id: 2, name: 'Colombia', cities: ['Bogotá', 'Barranquilla', 'Medellin']},
-        {id: 3, name: 'Ecuador', cities: ['Guayaquil', 'Quito', 'Cuenca']},
-        {id: 4, name: 'Perú', cities: ['Lima', 'Arequipa', 'Trujillo']},
+        { id: 1, name: 'Chile', cities: ['Santiago', 'Antofagasta', 'Concepción'] },
+        { id: 2, name: 'Colombia', cities: ['Bogotá', 'Barranquilla', 'Medellin'] },
+        { id: 3, name: 'Ecuador', cities: ['Guayaquil', 'Quito', 'Cuenca'] },
+        { id: 4, name: 'Perú', cities: ['Lima', 'Arequipa', 'Trujillo'] },
       ],
       allCities: [
-        {id: 1, name: 'Santiago', countryId: 1},
-        {id: 2, name: 'Antofagasta', countryId: 1},
-        {id: 3, name: 'Concepción', countryId: 1},
-        {id: 4, name: 'Bogotá', countryId: 2},
-        {id: 5, name: 'Barranquilla', countryId: 2},
-        {id: 6, name: 'Medellin', countryId: 2},
-        {id: 7, name: 'Guayaquil', countryId: 3},
-        {id: 8, name: 'Quito', countryId: 3},
-        {id: 9, name: 'Cuenca', countryId: 3},
-        {id: 10, name: 'Lima', countryId: 4},
-        {id: 11, name: 'Arequipa', countryId: 4},
-        {id: 12, name: 'Trujillo', countryId: 4},
+        { id: 1, name: 'Santiago', countryId: 1 },
+        { id: 2, name: 'Antofagasta', countryId: 1 },
+        { id: 3, name: 'Concepción', countryId: 1 },
+        { id: 4, name: 'Bogotá', countryId: 2 },
+        { id: 5, name: 'Barranquilla', countryId: 2 },
+        { id: 6, name: 'Medellin', countryId: 2 },
+        { id: 7, name: 'Guayaquil', countryId: 3 },
+        { id: 8, name: 'Quito', countryId: 3 },
+        { id: 9, name: 'Cuenca', countryId: 3 },
+        { id: 10, name: 'Lima', countryId: 4 },
+        { id: 11, name: 'Arequipa', countryId: 4 },
+        { id: 12, name: 'Trujillo', countryId: 4 },
       ],
       cities: []
     };
   },
   mounted() {
-    const username = this.$route.params.username;
-    console.log('Nombre completo del usuario:', username);
     const userId = localStorage.getItem('userId');
     profileApiService.getUserProfileById(userId).then(response => {
       const prof = response.data;
+      this.profileId = prof.id; // Guarda el profileId
       this.newName = prof.fullName;
       this.newEmail = prof.email;
       this.newCountry = prof.countryId;
@@ -60,7 +54,7 @@ export default {
       this.newSubscription = prof.subscriptionId;
       this.updateCities(this.newCountry);
       const currentPlan = this.memberships.find(plan => plan.id === this.newSubscription);
-      this.currentPlanName = currentPlan ? currentPlan.name : 'Unknown Plan';// Actualiza las ciudades cuando se carga el perfil
+      this.currentPlanName = currentPlan ? currentPlan.name : 'Unknown Plan';
     }).catch(error => {
       console.error('Error obteniendo el perfil del usuario:', error);
     });
@@ -71,58 +65,19 @@ export default {
     }
   },
   methods: {
-    redirectToMembershipSelector() {
-      this.$router.push({ name: 'membership-selector' });
-    },
-    changeSubscription() {
-      this.boolSubscription = false;
-    },
-    saveSubscriptionChange(newSubscription) {
-      const currentPlan = this.memberships.find(plan => plan.id === newSubscription);
-      this.currentPlanName = currentPlan ? currentPlan.name : 'Unknown Plan';
-      this.boolSubscription = true;
-    },
-    saveNameChange(newName) {
-      this.boolName = true;
-    },
-    changeName() {
-      this.boolName = false;
-    },
-    saveEmailChange(newEmail) {
-      const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-      if (emailRegex.test(newEmail)) {
-        this.boolEmail = true;
-      } else {
-        alert('Por favor, ingresa una dirección de correo válida');
-      }
-    },
-    changeEmail() {
-      this.boolEmail = false;
-    },
-    saveCountryChange(newCountry) {
-      this.boolCountry = true;
-    },
-    changeCountry() {
-      this.boolCountry = false;
-    },
-    saveCityChange(newCity) {
-      this.boolCity = true;
-    },
-    changeCity() {
-      this.boolCity = false;
-    },
-    savePasswordChange(newPassword) {
-      this.boolPassword = true;
-    },
-    changePassword() {
-      this.boolPassword = false;
+    enableEdit() {
+      this.isEditable = true;
     },
     confirmApply() {
-      const profile = new Profile(localStorage.getItem('userId'), this.newName, this.newEmail, this.newCountry, this.newSubscription, this.newCity);
+      const profileData = {
+        fullName: this.newName,
+        emailAddress: this.newEmail,
+        countryId: this.newCountry,
+        cityId: this.newCity,
+        subscriptionId: this.newSubscription
+      };
 
-      console.log(profile);
-
-      profileApiService.update(profile.id, profile).then(response => {
+      profileApiService.updateProfile(this.profileId, profileData).then(response => {
         console.log(response);
         this.$router.push('/control-panel');
         alert('¡Actualización exitosa!');
@@ -134,12 +89,16 @@ export default {
     signOut() {
       this.$router.push('/sign-in');
     },
+    redirectToMembershipSelector() {
+      this.$router.push({ name: 'membership-selector' });
+    },
     updateCities(countryId) {
       this.cities = this.allCities.filter(city => city.countryId === countryId);
     }
-  },
+  }
 };
 </script>
+
 
 <template>
   <div class="profile-wrapper">
@@ -149,91 +108,61 @@ export default {
           <h1 class="profile-title">{{ $t('myProfile') }}</h1>
         </div>
       </template>
+
       <template #content>
         <div class="profile-content">
-          <!-- Columna de la imagen -->
+          <!-- Columna de imagen y botón de editar -->
           <div class="profile-image-column">
-            <img class="profile-avatar" alt="avatar"
-                 src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
+            <img
+                class="profile-avatar"
+                alt="avatar"
+                src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg"
+            />
+            <button class="edit-icon-button" @click="enableEdit">
+              <i class="pi pi-pencil"></i> Editar perfil
+            </button>
           </div>
 
-          <!-- Columna de los formularios -->
+          <!-- Columna de formulario -->
           <div class="profile-form-column">
-            <!-- Fila de Nombre y Email -->
+            <!-- Nombre y Email -->
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">{{ $t('name') }}:</label>
-                <div class="input-group">
-                  <pv-input-text v-model="newName" :disabled="boolName" class="form-input"/>
-                  <pv-button v-if="!boolName" class="check-button" @click="saveNameChange(newName)">{{
-                      $t('check')
-                    }}
-                  </pv-button>
-                  <pv-button v-else class="change-button" @click="changeName()">{{ $t('change') }}</pv-button>
-                </div>
+                <pv-input-text v-model="newName" :disabled="!isEditable" class="form-input" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">{{ $t('email') }}:</label>
-                <div class="input-group">
-                  <pv-input-text v-model="newEmail" :disabled="boolEmail" class="form-input"/>
-                  <pv-button v-if="!boolEmail" class="check-button" @click="saveEmailChange(newEmail)">{{
-                      $t('check')
-                    }}
-                  </pv-button>
-                  <pv-button v-else class="change-button" @click="changeEmail()">{{ $t('change') }}</pv-button>
-                </div>
+                <pv-input-text v-model="newEmail" :disabled="!isEditable" class="form-input" />
               </div>
             </div>
 
-            <!-- Línea divisoria -->
-            <hr class="divider"/>
+            <hr class="divider" />
 
-            <!-- Fila de País y Ciudad -->
+            <!-- País, Ciudad y Plan -->
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">{{ $t('country') }}:</label>
-                <div class="input-group">
-                  <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id"
-                               :disabled="boolCountry" class="form-input"/>
-                  <pv-button v-if="!boolCountry" class="check-button" @click="saveCountryChange(newCountry)">
-                    {{ $t('check') }}
-                  </pv-button>
-                  <pv-button v-else class="change-button" @click="changeCountry()">{{ $t('change') }}</pv-button>
-                </div>
+                <pv-dropdown v-model="newCountry" :options="countries" optionLabel="name" optionValue="id"
+                             :disabled="!isEditable" class="form-input" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">{{ $t('city') }}:</label>
-                <div class="input-group">
-                  <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id"
-                               :disabled="boolCity" class="form-input"/>
-                  <pv-button v-if="!boolCity" class="check-button" @click="saveCityChange(newCity)">{{
-                      $t('check')
-                    }}
-                  </pv-button>
-                  <pv-button v-else class="change-button" @click="changeCity()">{{ $t('change') }}</pv-button>
-                </div>
+                <pv-dropdown v-model="newCity" :options="cities" optionLabel="name" optionValue="id"
+                             :disabled="!isEditable" class="form-input" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">{{ $t('Current plan') }}:</label>
                 <div class="input-group">
-                  <pv-input-text
-                      v-model="currentPlanName"
-                      :disabled="true"
-                      class="form-input"
-                  />
-                  <pv-button v-if="!boolSubscription" class="check-button"
-                             @click="saveSubscriptionChange(newSubscription)">
-                    {{ $t('check') }}
-                  </pv-button>
-                  <pv-button v-else class="change-button" @click="redirectToMembershipSelector">
+                  <pv-input-text v-model="currentPlanName" :disabled="true" class="form-input" />
+                  <pv-button class="change-button" @click="redirectToMembershipSelector">
                     {{ $t('change') }}
                   </pv-button>
                 </div>
               </div>
-
             </div>
 
             <!-- Botones de acción -->
@@ -248,45 +177,50 @@ export default {
   </div>
 </template>
 
+
+
 <style scoped>
 .profile-wrapper {
-  width: 1000%;
-  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 
 .profile-card {
+  width: 90%;
+  max-width: 1100px;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  width: 10%;
 }
 
 .profile-header {
-  padding: 15px;
+  padding: 20px 0;
+  text-align: left;
+  background-color: #ffffff;
   border-bottom: 1px solid #eee;
-  text-align: center;
-  background-color: #f8f9fa;
+  padding-left: 30px;
 }
 
 .profile-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-  color: #333;
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
 }
 
 .profile-content {
   display: flex;
-  padding: 20px;
-  gap: 30px;
+  padding: 40px;
+  gap: 50px;
 }
 
 .profile-image-column {
-  flex: 0 0 auto;
+  flex: 0 0 180px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
 }
 
 .profile-avatar {
@@ -296,67 +230,52 @@ export default {
   border: 3px solid #f0f0f0;
 }
 
+.edit-icon-button {
+  margin-top: 15px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #465aed;
+  font-weight: 600;
+}
+
+.edit-icon-button:hover {
+  text-decoration: underline;
+}
+
 .profile-form-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .form-row {
   display: flex;
-  gap: 20px;
-}
-
-.form-group {
-  flex: 1;
-  min-width: 0;
-}
-
-.form-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #555;
-}
-
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.form-input {
-  flex: 1;
-  min-width: 0;
-}
-
-.check-button {
-  background-color: #005f40;
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 4px;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .change-button {
   background-color: #ffffff;
   color: #465aed;
   border: 1px solid #ddd;
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
 }
 
 .divider {
   border: none;
   border-top: 1px solid #eee;
-  margin: 0;
+  margin: 10px 0;
 }
 
 .button-container {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  justify-content: start;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .apply-button {
@@ -378,6 +297,7 @@ export default {
 @media (max-width: 768px) {
   .profile-content {
     flex-direction: column;
+    padding: 20px;
   }
 
   .form-row {
@@ -385,3 +305,5 @@ export default {
   }
 }
 </style>
+
+
