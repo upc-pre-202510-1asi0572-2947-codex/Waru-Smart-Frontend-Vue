@@ -49,5 +49,8 @@
   "signIn": "Iniciar sesión",
   "signUp": "Registrarse",
   "Welcome":"Bienvenido",
-  "DeviceTypeUsed": "Tipos de dispositivos utilizados en WaruSmart"
+  "DeviceTypeUsed": "Tipos de dispositivos utilizados en WaruSmart",
+  "LastUpdate": "Ultima actualizacion",
+  "EnviromentHumidity": "Humedad ambiental",
+  "EnviromentTemperature": "Temperatura ambiental"
 }
