@@ -34,7 +34,7 @@ export default {
       <pv-tab-panel header="General Information" name="General-Information">
         <general-information :sowing-id="selectedSowingId" :crop-id="selectedCropId"/>
       </pv-tab-panel>
-      <pv-tab-panel header="IoT Devices" name="IoT-devices">
+      <pv-tab-panel header="Sensor Panel" name="IoT-devices">
         <crop-care :sowing-id="selectedSowingId" :crop-id="selectedCropId"/>
       </pv-tab-panel>
     </pv-tab-view>
