@@ -23,7 +23,7 @@ const routes = [
     { path: '/user-profile-edit/:username', name: 'user-profile-edit', component: UserProfileEditPageComponent, meta: { title: 'Edit Profile' } },
     { path: '/user-profile-create', name: 'user-profile-create', component: UserProfileCreatePageComponent, meta: { title: 'Create Profile' } },
     { path: '/membership-selector', name: 'membership-selector', component: MembershipSelectorComponent, meta: { title: 'Membership Selector' } },
-    { path: '/sowing-statistics-reports', name: 'sowing-statistics-reports', component: CropsStatisticsComponent, meta: { title: 'Sowing Statistics' } },
+    { path: '/sowing-statistics-reports:tab?', name: 'sowing-statistics-reports', component: CropsStatisticsComponent, meta: { title: 'Sowing Statistics' } },
     { path: '/control-panel', name: 'control-panel', component: ControlPanelPageComponent, meta: { title: 'Control Panel' } },
     { path: '/crop-list/registration', name: 'crop-list-registration', component: CropListAndRegistrationManagementComponent, meta: { title: 'Crop Registration' } },
     { path: '/crop/:cropId/sowing/:sowingId/:tab?', name: 'crop-information', component: CropInformationManagementComponent, meta: { title: 'Crop Information' } },
