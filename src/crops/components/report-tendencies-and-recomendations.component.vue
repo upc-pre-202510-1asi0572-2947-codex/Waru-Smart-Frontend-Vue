@@ -13,7 +13,7 @@ export default {
 </script>
 
 <template>
-  <p>tendencies and recomendation</p>
+  <p>Saca tendencias en base a los datos de reportes (No se que hacer para recomendaciones :P)</p>
 </template>
 
 <style scoped>
