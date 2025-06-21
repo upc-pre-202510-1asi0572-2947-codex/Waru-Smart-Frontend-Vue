@@ -78,7 +78,7 @@ export default {
 
 <template>
   <div v-for="report in reports">
-    <Card style="margin-bottom: 1em" class="m-6">
+    <Card style="margin-bottom: 1em; background:#00ba7b; border-radius:2em" class="m-6">
       <template #title>{{report.name}}: {{report.id}}</template>
       <template #content>
         <div v-for="data in report.irrigation" style="border: 1px solid black; margin-bottom: 5px">

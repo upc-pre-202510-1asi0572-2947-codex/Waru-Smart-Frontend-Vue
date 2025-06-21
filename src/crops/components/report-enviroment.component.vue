@@ -90,7 +90,7 @@ export default {
   <div v-for="report in reports">
     <h2 style="margin-bottom: 1em; text-align: center">{{report.name}}: {{report.id}}</h2>
     <div class = "grid-container">
-      <Card style="margin-bottom: 1em" class="m-6">
+      <Card style="margin-bottom: 1em; background:#00ba7b; border-radius:2em" class="m-6">
         <template #title>Humedad</template>
         <template #content>
           <div v-for="data in report.humidity" style="border: 1px solid black; margin-bottom: 5px">
@@ -99,7 +99,7 @@ export default {
           </div>
         </template>
       </Card>
-      <Card style="margin-bottom: 1em" class="m-6">
+      <Card style="margin-bottom: 1em; background:#00ba7b; border-radius:2em" class="m-6">
         <template #title>Temperatura</template>
         <template #content>
           <div v-for="data in report.temperature" style="border: 1px solid black; margin-bottom: 5px">

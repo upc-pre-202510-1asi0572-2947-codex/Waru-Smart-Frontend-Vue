@@ -46,8 +46,8 @@ export default {
   <p>Produccion de cada cultivo segun produccion/area, calculada con cada cosecha</p>
 
   <div>
-    <card v-for="(report, index) in reports" key="{{name}}">
-      <template #title style="background: #ff0000"> {{ report.name }} </template>
+    <card v-for="(report, index) in reports" key="{{name}}" style="border-radius:2em">
+      <template #title> {{ report.name }} </template>
       <template #subtitle> Valor de productividad: {{report.production/report.area}} val/hectarea </template>
       <template #content>
         <div>
@@ -62,7 +62,7 @@ export default {
 
 <style scoped>
   .p-card{
-    background: #005034;
+    background: #00ba7b;
     border-radius: 20px;
     margin-top: 20px;
   }
