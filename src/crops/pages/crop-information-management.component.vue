@@ -1,10 +1,12 @@
 <script>
 import GeneralInformation from "../components/general-information.component.vue";
 import CropCare from "../components/iot-devices.component.vue";
+import EnviromentInformation from "../components/enviroment-information.component.vue";
+import CropEnviromentInformation from "../components/enviroment-information.component.vue";
 
 export default {
   name: "Sowing-information-management",
-  components: {CropCare, GeneralInformation},
+  components: {CropEnviromentInformation, CropCare, GeneralInformation, EnviromentInformation},
   data() {
     return {
       selectedSowingId: this.$route.params.sowingId,
@@ -36,6 +38,9 @@ export default {
       </pv-tab-panel>
       <pv-tab-panel header="Sensor Panel" name="IoT-devices">
         <crop-care :sowing-id="selectedSowingId" :crop-id="selectedCropId"/>
+      </pv-tab-panel>
+      <pv-tab-panel header="Enviroment Information" name="Enviroment-Information">
+        <crop-enviroment-information></crop-enviroment-information>
       </pv-tab-panel>
     </pv-tab-view>
   </div>
