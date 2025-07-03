@@ -1,10 +1,12 @@
 <script>
 
 import Card from 'primevue/card';
+import Button from "primevue/button";
 
 export default {
   name: "productivity-report",
   components: {
+    Button,
     Card
   },
   data(){
@@ -35,6 +37,26 @@ export default {
   methods: {
     async getData(){
       //TODO: Obtener la data del endpoint
+    },
+
+    //Creates a txt file for the user to download
+    download(){
+      let contenido = "PRODUCTIVITY REPORT\n\n"
+
+      for(let i = 0; i < this.reports.length; i++){
+        contenido += this.reports[i].name.toUpperCase() + "\nId: " + this.reports[i].id + "\n";
+        contenido += "Area: " + this.reports[i].area + "\n";
+        contenido += "Producion: " + this.reports[i].production + "\n";
+        contenido += "Productivity: " + this.reports[i].production/this.reports[i].area + " val/hectareas \n\n";
+      }
+
+      const blob = new Blob([contenido], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Productivity Report.txt";
+      link.click();
+      URL.revokeObjectURL(url)
     }
   }
 }
@@ -43,7 +65,8 @@ export default {
 
 <template>
   <h2>Productivity Report</h2>
-  <p>Produccion de cada cultivo segun produccion/area, calculada con cada cosecha</p>
+  <p></p>
+  <Button label="Download Report" class="downloadButton" @click="download()"/>
 
   <div>
     <card v-for="(report, index) in reports" key="{{name}}" style="border-radius:2em">
@@ -65,6 +88,10 @@ export default {
     background: #00ba7b;
     border-radius: 20px;
     margin-top: 20px;
+  }
+
+  .downloadButton{
+    background-color: #005034
   }
 
   template{

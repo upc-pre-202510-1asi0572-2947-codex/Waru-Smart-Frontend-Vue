@@ -1,10 +1,12 @@
 <script>
 
 import Card from 'primevue/card';
+import Button from "primevue/button";
 
 export default {
   name: "enviroment-report",
   components: {
+    Button,
     Card
   },
   data(){
@@ -80,6 +82,40 @@ export default {
   methods: {
     async getData(){
       //TODO Sacar data del back
+    },
+    download(){
+      let content = "ENVIRONMENT REPORT\n\n"
+
+      for(let i = 0; i < this.reports.length; i++){
+        let report = this.reports[i];
+        content += report.name.toUpperCase() + "\nId: " + report.id + "\n";
+        content += "Humidity report: \n";
+        content += "--------------------------------\n";
+
+        for(let j = 0; j < report.humidity.length; j++){
+          content += "Date: " + report.humidity[j].date + "\n";
+          content += "Humidity: " + report.humidity[j].value + "\n";
+          content += "--------------------------------\n";
+        }
+
+        content += "\nTemperature report: \n";
+        content += "--------------------------------\n";
+
+        for(let j = 0; j < report.temperature.length; j++){
+          content += "Date: " + report.temperature[j].date + "\n";
+          content += "Temperature: " + report.temperature[j].value + "\n";
+          content += "--------------------------------\n";
+        }
+        content += "\n";
+      }
+
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Environment Report.txt";
+      link.click();
+      URL.revokeObjectURL(url)
     }
   }
 }
@@ -87,6 +123,10 @@ export default {
 </script>
 
 <template>
+  <h2>Enviroment Report</h2>
+  <p></p>
+  <Button label="Download Report" class="downloadButton" @click="download()"/>
+
   <div v-for="report in reports">
     <h2 style="margin-bottom: 1em; text-align: center">{{report.name}}: {{report.id}}</h2>
     <div class = "grid-container">
@@ -117,5 +157,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1em;
+}
+
+.downloadButton{
+  background-color: #005034
 }
 </style>
