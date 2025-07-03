@@ -1,10 +1,12 @@
 <script>
 
 import Card from 'primevue/card';
+import Button from "primevue/button";
 
 export default {
   name: "water-consumption-report",
   components: {
+    Button,
     Card
   },
   data(){
@@ -70,6 +72,33 @@ export default {
   methods: {
     async getData(){
       //TODO Sacar data del back
+    },
+
+    //Creates a txt file for the user to download
+    download(){
+      let content = "WATER REPORT\n\n"
+
+      for(let i = 0; i < this.reports.length; i++){
+        let report = this.reports[i];
+        content += report.name.toUpperCase() + "\nId: " + report.id + "\n";
+        content += "Irrigations: \n";
+        content += "--------------------------------\n";
+
+        for(let j = 0; j < report.irrigation.length; j++){
+          content += "Date: " + report.irrigation[j].date + "\n";
+          content += "Water consumption: " + report.irrigation[j].quantity + "\n";
+          content += "--------------------------------\n";
+        }
+        content += "\n";
+      }
+
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Water Report.txt";
+      link.click();
+      URL.revokeObjectURL(url)
     }
   }
 }
@@ -77,6 +106,10 @@ export default {
 </script>
 
 <template>
+  <h2>Water Consumption Report</h2>
+  <p></p>
+  <Button label="Download Report" class="downloadButton" @click="download()"/>
+
   <div v-for="report in reports">
     <Card style="margin-bottom: 1em; background:#00ba7b; border-radius:2em" class="m-6">
       <template #title>{{report.name}}: {{report.id}}</template>
@@ -91,5 +124,7 @@ export default {
 </template>
 
 <style scoped>
-
+.downloadButton{
+  background-color: #005034
+}
 </style>

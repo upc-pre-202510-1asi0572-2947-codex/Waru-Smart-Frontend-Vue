@@ -1,4 +1,5 @@
 <template>
+
   <div class="container">
     <!-- Imagen -->
     <div class="image-container">
@@ -33,6 +34,9 @@
         <li>Soil Moisture Devices: {{ iotDevicesInfo.quantitySoilMoistureDevices }}</li>
       </ul>
     </div>
+    <div>
+      <Button label="Text" class="onOffButton" @click="fas()"/>
+    </div>
   </div>
 </template>
 
@@ -40,9 +44,11 @@
 import { SowingsApiService } from "../services/sowings-api.service.js";
 import { CropsRecomendationApiService } from "../services/crops-recomendation-api.service.js";
 import { SowingsDevicesApiService } from "../services/sowing-devices-api.service.js";
+import Button from 'primevue/button';
 
 export default {
   name: "GeneralInformation",
+  components: {Button},
   props: ["sowingId"],
   data() {
     return {
@@ -100,6 +106,9 @@ export default {
         console.error("Error fetching data:", error);
       }
     },
+    async fas(){
+      console.log("pressed")
+    }
   },
 };
 </script>
@@ -190,6 +199,10 @@ export default {
   margin-bottom: 8px;
   font-weight: 500;
   text-align: left;
+}
+
+.onOffButton{
+  background-color: #FF0000
 }
 
 /* Responsive */
