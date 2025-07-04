@@ -1,6 +1,6 @@
 <script>
 import GeneralInformation from "../components/general-information.component.vue";
-import CropCare from "../components/iot-devices.component.vue";
+import CropCare from "../components/iot-device.component.vue";
 
 export default {
   name: "Sowing-information-management",

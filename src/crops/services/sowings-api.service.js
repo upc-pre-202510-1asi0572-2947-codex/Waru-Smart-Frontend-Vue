@@ -19,9 +19,11 @@ export class SowingsApiService{
     update(id, tutorialResource) {
         return http.put(`/crops-management/sowings/${id}`, tutorialResource);
     }
-    updatePhenologicalPhase(id) {
-        return http.put(`/crops-management/sowings/${id}/phenologicalphase`);
+
+    updatePhenologicalPhase(sowingId, phaseId) {
+        return http.put(`/crops-management/sowings/${sowingId}/phenological-phase/${phaseId}`);
     }
+
     updateSowing(sowing){
         return new Promise((resolve,reject) =>{
             http.put(`/crops-management/sowings/${sowing.id}`, sowing)
@@ -51,7 +53,7 @@ export class SowingsApiService{
     }
 
     getByUserId(userId) {
-        return http.get(`/crops-management/sowings/${userId}/user`);
+        return http.get(`/crops-management/sowings/user/${userId}`);
     }
 
     findByTitle(title) {

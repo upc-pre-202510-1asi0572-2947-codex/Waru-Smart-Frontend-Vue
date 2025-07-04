@@ -1,7 +1,7 @@
 <script>
 import { SowingsDevicesApiService } from "../services/sowing-devices-api.service.js";
-import AddDevicesDialog from "./add-devices-dialog.component.vue";
-import UpdateDevicesDialog from "./update-devices-dialog.component.vue";
+import AddDevicesDialog from "./add-device-dialog.component.vue";
+import UpdateDevicesDialog from "./update-device-dialog.component.vue";
 
 export default {
   name: "IoT",

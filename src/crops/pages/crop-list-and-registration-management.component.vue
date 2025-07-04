@@ -31,7 +31,7 @@ export default {
   methods:{
     filterByCrop(cropId) {
       if (!this.originalSowings || this.originalSowings.length === 0) {
-        console.warn("No hay datos en originalSowings para filtrar.");
+        console.warn("There is no data in original. Sowings to filter..");
         return;
       }
       // Filtra los sowings asociados al crop_id
@@ -41,7 +41,7 @@ export default {
     reloadData() {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        console.error("No se encontró userId en localStorage");
+        console.error("No userId found in localStorage");
         return;
       }
 
@@ -58,7 +58,7 @@ export default {
             this.originalSowings = [...processedSowings]; // Guarda los datos originales
           })
           .catch((error) => {
-            console.error("Error al cargar los sowings del usuario:", error);
+            console.error("Error loading user plantings:", error);
           });
     },
 
@@ -113,14 +113,14 @@ export default {
     },
     viewSowing(rowData) {
       if (!rowData.crop_id || !rowData.id) {
-        console.error("Faltan los parámetros requeridos cropId o sowingId");
+        console.error("The required parameters cropId or sowingId are missing");
         return;
       }
       this.$router.push({
         name: 'crop-information',
         params: {
-          cropId: rowData.crop_id, // Asegúrate de que este campo exista en los datos
-          sowingId: rowData.id,   // Asegúrate de que este campo exista en los datos
+          cropId: rowData.crop_id,
+          sowingId: rowData.id,
         },
       });
     },
@@ -136,7 +136,7 @@ export default {
       // Obtén el userId del localStorage
       const userId = localStorage.getItem('userId');
       if (!userId) {
-        console.error('No se encontró userId en localStorage');
+        console.error('No userId found in localStorage');
         return;
       }
 
@@ -148,7 +148,7 @@ export default {
       let sowingResource = {
         areaLand: this.sowing.area_land,
         cropId: this.sowing.crop_id,
-        userId: parseInt(userId) // Asegúrate de que sea un número
+        userId: parseInt(userId)
       };
 
       console.log(sowingResource);
@@ -159,7 +159,7 @@ export default {
             this.reloadData();
           })
           .catch((error) => {
-            console.error('Error al crear el sowing:', error);
+            console.error('Error creating seed:', error);
           });
     },
 
@@ -210,31 +210,31 @@ onPhaseChangeConfirmed() {
     },
 
     updateSowing() {
-      // Convertir el objeto sowing al formato adecuado
+      // Convert the seeded object to the appropriate format
       this.sowing = Sowing.fromDisplayableSowing(this.sowing);
 
-      // Crear el objeto de actualización
+      // Create the update object
       const updateResource = {
         areaLand: this.sowing.area_land,
         cropId: this.sowing.crop_name.id
       };
 
-      console.log('Enviando datos para actualizar:', updateResource);
+      console.log('Send data:', updateResource);
 
-      // Llamar al servicio para actualizar el sowing
+      // Call the service to update the planting.
       this.sowingService
           .update(this.sowing.id, updateResource)
           .then((response) => {
-            console.log('Respuesta del backend:', response.data);
+            console.log('Response backend:', response.data);
 
-            // Actualizar el sowing con los datos devueltos por el backend
+
             this.sowing = Sowing.toDisplayableSowing(response.data);
 
-            // Recargar la lista de sowings
+
             this.reloadData();
           })
           .catch((error) => {
-            console.error('Error al actualizar el sowing:', error);
+            console.error('Error updating seeding:', error);
           });
     },
 
@@ -253,37 +253,37 @@ onPhaseChangeConfirmed() {
     loadCrops() {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        console.error("No se encontró userId en localStorage");
+        console.error("No userId found in localStorage");
         return;
       }
       // Obtén los sowings asociados al usuario
       this.sowingService.getByUserId(userId)
           .then((response) => {
             const sowings = response.data;
-            console.log("Sowings obtenidos:", sowings);
+            console.log("Sowings obtained:", sowings);
 
             // Extrae los crop_ids únicos
             const cropIds = [...new Set(sowings.map((sowing) => sowing.crop_id || sowing.cropId))];
-            console.log("Crop IDs únicos antes de filtrar:", cropIds);
+            console.log("Unique crop IDs before filtering:", cropIds);
 
             const validCropIds = cropIds.filter((id) => id !== undefined);
-            console.log("Crop IDs válidos:", validCropIds);
+            console.log("Invalid crop identifiers:", validCropIds);
 
             // Obtén todos los crops y filtra solo los que tienen un sowing asociado
             return this.cropsService.getAllCrops()
                 .then((response) => {
                   this.crops = response.data.filter((crop) => validCropIds.includes(crop.id));
-                  console.log("Crops filtrados:", this.crops); // Verifica los crops filtrados
+                  console.log("Filtered crops:", this.crops); // Verifica los crops filtrados
                 });
           })
           .catch((error) => {
-            console.error("Error al cargar los cultivos o sowings:", error);
+            console.error("Error loading crops or sowings:", error);
           });
     },
   },
 
   created() {
-    console.log('Tabla creada');
+    console.log('Created table');
     this.sowingService = new SowingsApiService();
     this.cropsService = new CropsRecomendationApiService();
     this.loadCrops();

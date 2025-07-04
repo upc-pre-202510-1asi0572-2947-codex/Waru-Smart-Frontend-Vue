@@ -14,7 +14,7 @@ export class SowingsDevicesApiService {
     }
 
     async getGeneralInformation(sowingId) {
-        return await http.get(`/crops-management/sowings/${sowingId}/devices/general-information`);
+        return await http.get(`/crops-management/sowings/${sowingId}/indicators`);
     }
 
     async updateDevice(deviceId, deviceData) {
