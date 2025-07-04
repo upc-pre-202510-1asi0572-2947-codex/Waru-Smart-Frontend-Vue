@@ -24,6 +24,8 @@
   "harvestFailure":"The harvest was either cancelled or a failure",
   "cropName":"Crop Name",
   "areaLand":"Area(m2)",
+  "CropHistory": "Crop History",
+  "ConsultationForum": "Consultation Forum",
   "cropNameRequired":"Crop Name is required",
   "listCrops":"List of Crops in Progress",
   "newConsultation":"New Consultation",
@@ -47,5 +49,8 @@
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "Welcome":"Welcome",
-  "DeviceTypeUsed": "Device Type Used at WaruSmart"
+  "DeviceTypeUsed": "Device Type Used at WaruSmart",
+  "LastUpdate": "Last update",
+  "EnviromentHumidity": "Enviroment humidity",
+  "EnviromentTemperature": "Enviroment temperature"
 }

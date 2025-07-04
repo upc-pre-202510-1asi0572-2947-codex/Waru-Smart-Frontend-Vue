@@ -1,112 +1,3 @@
-<script>
-import { ProfileApiService } from "../service/profile-api.service.js";
-import { Profile2 } from "../model/profile.entity.js";
-
-const profileApiService = new ProfileApiService();
-
-export default {
-  data() {
-    return {
-      newFirstName: '',
-      newLastName: '',
-      newEmail: '',
-      newCountry: null,
-      newCity: null,
-      newSubscription: 0, // Inicializado explícitamente como 0
-      countries: [
-        {id: 1, name: 'Chile'},
-        {id: 2, name: 'Colombia'},
-        {id: 3, name: 'Ecuador'},
-        {id: 4, name: 'Perú'},
-      ],
-      allCities: [
-        {id: 1, name: 'Santiago', countryId: 1},
-        {id: 2, name: 'Antofagasta', countryId: 1},
-        {id: 3, name: 'Concepción', countryId: 1},
-        {id: 4, name: 'Bogotá', countryId: 2},
-        {id: 5, name: 'Barranquilla', countryId: 2},
-        {id: 6, name: 'Medellin', countryId: 2},
-        {id: 7, name: 'Guayaquil', countryId: 3},
-        {id: 8, name: 'Quito', countryId: 3},
-        {id: 9, name: 'Cuenca', countryId: 3},
-        {id: 10, name: 'Lima', countryId: 4},
-        {id: 11, name: 'Arequipa', countryId: 4},
-        {id: 12, name: 'Trujillo', countryId: 4},
-      ],
-      cities: []
-    };
-  },
-  watch: {
-    newCountry(newVal) {
-      this.updateCities(newVal);
-    }
-  },
-  methods: {
-    saveEmailChange(newEmail) {
-      const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-      if (emailRegex.test(newEmail)) {
-        this.boolEmail = true;
-      } else {
-        alert('Please enter a valid email address');
-      }
-    },
-    updateCities(countryId) {
-      this.cities = this.allCities.filter(city => city.countryId === countryId);
-      this.newCity = null; // Resetear ciudad al cambiar país
-    },
-    confirmApply() {
-      const userId = localStorage.getItem('userId');
-
-      if (!userId) {
-        alert('No se pudo obtener el ID del usuario. Por favor, inicia sesión nuevamente.');
-        return;
-      }
-
-      // Validación de campos obligatorios
-      if (!this.newFirstName || !this.newLastName || !this.newEmail || !this.newCountry || !this.newCity) {
-        alert('Por favor complete todos los campos obligatorios.');
-        return;
-      }
-
-      // Debug: Verificar valores antes de enviar
-      console.log('Valores seleccionados:', {
-        firstName: this.newFirstName,
-        lastName: this.newLastName,
-        email: this.newEmail,
-        country: this.newCountry,
-        city: this.newCity,
-        subscription: this.newSubscription
-      });
-
-      const profile = new Profile2(
-          this.newFirstName,
-          this.newLastName,
-          this.newEmail,
-          this.newCity,    // cityId (valor numérico)
-          0,               // subscriptionId (siempre 0)
-          this.newCountry, // countryId (valor numérico)
-          userId
-      );
-
-      console.log('Perfil a enviar:', profile);
-
-      profileApiService.create(profile)
-          .then(response => {
-            console.log('Respuesta del servidor:', response);
-            this.$router.push('/membership-selector');
-          })
-          .catch(error => {
-            console.error('Error al crear el perfil:', error);
-            alert('Error al crear el perfil. Verifica la consola para más detalles.');
-          });
-    },
-    signOut() {
-      // Tu lógica de signOut
-    }
-  }
-};
-</script>
-
 <template>
   <div class="profile-wrapper">
     <pv-card class="profile-card">
@@ -123,7 +14,7 @@ export default {
                  src="https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg">
           </div>
 
-          <!-- Columna de los formularios -->
+          <!-- Columna del formulario -->
           <div class="profile-form-column">
             <!-- Fila de Nombre y Apellido -->
             <div class="form-row">
@@ -161,7 +52,7 @@ export default {
                 <label class="form-label">{{ $t('country') }}:</label>
                 <div class="input-group">
                   <pv-dropdown
-                      v-model="newCountry"
+                      v-model.number="newCountry"
                       :options="countries"
                       optionLabel="name"
                       optionValue="id"
@@ -175,7 +66,7 @@ export default {
                 <label class="form-label">{{ $t('city') }}:</label>
                 <div class="input-group">
                   <pv-dropdown
-                      v-model="newCity"
+                      v-model.number="newCity"
                       :options="cities"
                       optionLabel="name"
                       optionValue="id"
@@ -197,6 +88,113 @@ export default {
     </pv-card>
   </div>
 </template>
+
+<script>
+import { ProfileApiService } from "../service/profile-api.service.js";
+
+const profileApiService = new ProfileApiService();
+
+export default {
+  data() {
+    return {
+      newFirstName: '',
+      newLastName: '',
+      newEmail: '',
+      newCountry: null,
+      newCity: null,
+      countries: [
+        { id: 1, name: 'Chile' },
+        { id: 2, name: 'Colombia' },
+        { id: 3, name: 'Ecuador' },
+        { id: 4, name: 'Perú' },
+      ],
+      allCities: [
+        { id: 1, name: 'Santiago', countryId: 1 },
+        { id: 2, name: 'Antofagasta', countryId: 1 },
+        { id: 3, name: 'Concepción', countryId: 1 },
+        { id: 4, name: 'Bogotá', countryId: 2 },
+        { id: 5, name: 'Barranquilla', countryId: 2 },
+        { id: 6, name: 'Medellin', countryId: 2 },
+        { id: 7, name: 'Guayaquil', countryId: 3 },
+        { id: 8, name: 'Quito', countryId: 3 },
+        { id: 9, name: 'Cuenca', countryId: 3 },
+        { id: 10, name: 'Lima', countryId: 4 },
+        { id: 11, name: 'Arequipa', countryId: 4 },
+        { id: 12, name: 'Trujillo', countryId: 4 },
+      ],
+      cities: []
+    };
+  },
+  watch: {
+    newCountry(newVal) {
+      this.updateCities(newVal);
+    }
+  },
+  methods: {
+    updateCities(countryId) {
+      this.cities = this.allCities.filter(city => city.countryId === countryId);
+      this.newCity = null;
+    },
+    confirmApply() {
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        alert('No se pudo obtener el ID del usuario. Por favor, inicia sesión nuevamente.');
+        return;
+      }
+
+      if (!this.newFirstName || !this.newLastName || !this.newEmail || !this.newCountry || !this.newCity) {
+        alert('Por favor complete todos los campos obligatorios.');
+        return;
+      }
+
+      const selectedCity = this.allCities.find(c => c.id === this.newCity);
+      if (!selectedCity || selectedCity.countryId !== this.newCountry) {
+        alert('La ciudad seleccionada no pertenece al país seleccionado.');
+        return;
+      }
+
+      const profileData = {
+        firstName: this.newFirstName.trim(),
+        lastName: this.newLastName.trim(),
+        email: this.newEmail.trim(),
+
+        // Enviamos estos "confundidos a propósito":
+        subscriptionId: this.newCountry,  // El backend lo interpretará como countryId
+        countryId: this.newCity,          // El backend lo interpretará como cityId
+        cityId: 10,                       // El backend lo interpretará como subscriptionId (fijo)
+
+        userId: parseInt(userId, 10)
+      };
+
+      /*
+      * const profileData = {
+  firstName: this.newFirstName.trim(),
+  lastName: this.newLastName.trim(),
+  email: this.newEmail.trim(),
+  cityId: this.newCity,
+  subscriptionId: 10,
+  countryId: this.newCountry,
+  userId: parseInt(userId, 10)
+};
+*/
+
+      console.log('Enviando al backend:', JSON.stringify(profileData, null, 2));
+
+      // Aquí usas tu método .create()
+      profileApiService.create(profileData)
+          .then(response => {
+            this.$router.push('/membership-selector');
+          })
+          .catch(error => {
+            console.error('Error al crear el perfil:', error.response?.data || error.message);
+            alert('Error al crear el perfil. Verifica la consola para más detalles.');
+          });
+    }
+
+  }
+};
+</script>
 
 <style scoped>
 .profile-wrapper {

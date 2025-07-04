@@ -37,12 +37,12 @@ export default {
         </router-link>
         <router-link to="/crop-history">
           <pv-button class="bg-transparent mr-4">
-            <p>{{ $t('Crop Histoty') }}</p>
+            <p>{{ $t('CropHistory') }}</p>
           </pv-button>
         </router-link>
         <router-link to="/consultation-forum">
           <pv-button class="bg-transparent mr-4">
-            <p>{{ $t('Consultation Forum') }}</p>
+            <p>{{ $t('ConsultationForum') }}</p>
           </pv-button>
         </router-link>
       </div>

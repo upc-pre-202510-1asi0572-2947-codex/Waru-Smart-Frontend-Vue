@@ -99,7 +99,7 @@ export default {
 
 <template>
   <div class="iot-container">
-    <h3 class="iot-title">IoT devices in this sowing</h3>
+    <h3 class="iot-title">Sensors in this sowing</h3>
 
     <div v-if="loading">Cargando dispositivos...</div>
     <div v-else-if="error">{{ error }}</div>
