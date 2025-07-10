@@ -14,16 +14,14 @@ export default {
       showDialog: false,
       form: {
         deviceId: "",
-        sensorType: "",
+        deviceType: "", // Nuevo campo
         location: "",
         status: "Disconnected", // Estado predeterminado
       },
-      sensorOptions: [
-        { label: "Humidity", value: "Humidity" },
-        { label: "Temperature", value: "Temperature" },
-        { label: "Soil Moisture", value: "SoilMoisture" },
+      deviceTypeOptions: [
+        { label: "Sensor", value: "Sensor" },
+        { label: "Actuator", value: "Actuator" },
       ],
-
       loading: false,
       error: null,
     };
@@ -33,7 +31,7 @@ export default {
       console.log("Received Sowing ID:", this.sowingId);
       console.log("Form data:", this.form);
 
-      if (!this.form.sensorType || !this.form.location) {
+      if (!this.form.deviceId || !this.form.deviceType || !this.form.location) {
         this.error = "All fields are required.";
         return;
       }
@@ -62,7 +60,8 @@ export default {
     },
     resetForm() {
       this.form = {
-        sensorType: "",
+        deviceId: "",
+        deviceType: "", // Restablecer el nuevo campo
         location: "",
         status: "Disconnected", // Estado predeterminado
       };
@@ -92,16 +91,16 @@ export default {
             placeholder="Enter device ID"
         />
       </div>
-      <!-- Campo para Sensor Type -->
+      <!-- Campo para Device Type -->
       <div class="form-group">
-        <label for="sensorType">Sensor Type:</label>
+        <label for="deviceType">Device Type:</label>
         <pv-dropdown
-            id="sensorType"
-            v-model="form.sensorType"
-            :options="sensorOptions"
+            id="deviceType"
+            v-model="form.deviceType"
+            :options="deviceTypeOptions"
             option-label="label"
             option-value="value"
-            placeholder="Select a sensor type"
+            placeholder="Select a device type"
         />
       </div>
       <!-- Campo para Location -->

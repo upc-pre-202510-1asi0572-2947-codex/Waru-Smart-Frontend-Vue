@@ -73,16 +73,14 @@ export default {
       this.showUpdateDialog = false; // Oculta el diálogo de actualización
       this.selectedDevice = null; // Limpia el dispositivo seleccionado
     },
-    getSensorImage(sensorType) {
-      switch (sensorType) {
-        case "Humidity":
+    getSensorImage(deviceType) {
+      switch (deviceType) {
+        case "Sensor":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp";
-        case "Temperature":
+        case "Actuator":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg";
-        case "SoilMoisture":
-          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290071/sensores-1_kgqo94.jpg";
         default:
-          return "/images/default-sensor.png";
+          return "/images/default-device.png"; // Imagen predeterminada si no coincide
       }
     },
   },
@@ -113,23 +111,19 @@ export default {
         <template #content>
           <h4 class="device-name">{{ device.name }}</h4>
           <img
-              :src="getSensorImage(device.sensorType)"
-              alt="Sensor Image"
+              :src="getSensorImage(device.deviceType)"
+              alt="Device Image"
               class="sensor-image"
           />
           <div class="iot-info">
-            <p><strong>Sensor Type:</strong> {{ device.sensorType || "N/A" }}</p>
-            <p>
-              <strong>Status:</strong>
-              <pv-button
-                  :label="device.status || 'N/A'"
-                  :class="getStatusClass(device.status)"
-                  :style="{ padding: '0.2rem 0.5rem', borderRadius: '4px', fontStyle: 'italic' }"
-                  @click="openUpdateDialog(device)"
-              />
-            </p>
+            <p><strong>Device Type:</strong> {{ device.deviceType || "N/A" }}</p>
+            <p><strong>Status:</strong> {{ device.status || "N/A" }}</p>
             <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
             <p><strong>Location:</strong> {{ device.location || "N/A" }}</p>
+            <!-- Nuevos valores -->
+            <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
+            <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
+            <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
           </div>
         </template>
       </pv-card>
@@ -158,7 +152,6 @@ export default {
         :device="selectedDevice"
         @device-updated="updateDeviceInList"
     />
-
   </div>
 </template>
 
