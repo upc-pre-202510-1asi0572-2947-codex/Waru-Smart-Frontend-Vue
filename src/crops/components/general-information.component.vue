@@ -29,13 +29,7 @@
         <li>Active Devices: {{ iotDevicesInfo.quantityActiveDevices }}</li>
         <li>Inactive Devices: {{ iotDevicesInfo.quantityInactiveDevices }}</li>
         <li>Disconnected Devices: {{ iotDevicesInfo.quantityDisconnectedDevices }}</li>
-        <li>Humidity Devices: {{ iotDevicesInfo.quantityHumidityDevices }}</li>
-        <li>Temperature Devices: {{ iotDevicesInfo.quantityTemperatureDevices }}</li>
-        <li>Soil Moisture Devices: {{ iotDevicesInfo.quantitySoilMoistureDevices }}</li>
       </ul>
-    </div>
-    <div>
-      <Button label="Text" class="onOffButton" @click="fas()"/>
     </div>
   </div>
 </template>
@@ -199,10 +193,6 @@ export default {
   margin-bottom: 8px;
   font-weight: 500;
   text-align: left;
-}
-
-.onOffButton{
-  background-color: #FF0000
 }
 
 /* Responsive */

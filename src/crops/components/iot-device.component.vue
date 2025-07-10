@@ -97,19 +97,21 @@ export default {
 
 <template>
   <div class="iot-container">
-    <h3 class="iot-title">Sensors in this sowing</h3>
+    <h3 class="iot-title">Devices in this sowing</h3>
 
     <div v-if="loading">Cargando dispositivos...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else class="iot-grid">
-      <!-- Renderiza los dispositivos si existen -->
       <pv-card
           v-for="device in devices"
           :key="device.deviceId"
           class="iot-card-style"
       >
         <template #content>
-          <h4 class="device-name">{{ device.name }}</h4>
+          <!-- Nombre dinámico basado en el tipo de dispositivo -->
+          <h4 class="device-name">
+            {{ device.deviceType === "Sensor" ? "Environment Collector" : "Irrigation Controller" }}
+          </h4>
           <img
               :src="getSensorImage(device.deviceType)"
               alt="Device Image"
@@ -117,18 +119,25 @@ export default {
           />
           <div class="iot-info">
             <p><strong>Device Type:</strong> {{ device.deviceType || "N/A" }}</p>
-            <p><strong>Status:</strong> {{ device.status || "N/A" }}</p>
+            <p>
+              <strong>Status:</strong>
+              <pv-button
+                  :label="device.status || 'N/A'"
+                  :class="getStatusClass(device.status)"
+                  :style="{ padding: '0.2rem 0.5rem', borderRadius: '4px', fontStyle: 'italic' }"
+                  @click="openUpdateDialog(device)"
+              />
+            </p>
             <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
-            <p><strong>Location:</strong> {{ device.location || "N/A" }}</p>
-            <!-- Nuevos valores -->
-            <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
-            <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
-            <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
+            <div v-if="device.deviceType === 'Sensor'">
+              <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
+              <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
+              <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
+            </div>
           </div>
         </template>
       </pv-card>
 
-      <!-- Tarjeta para agregar dispositivo siempre visible -->
       <pv-card class="iot-card-style add-device-card" @click="openAddDeviceDialog">
         <template #content>
           <div class="add-device-content">
@@ -139,14 +148,12 @@ export default {
       </pv-card>
     </div>
 
-    <!-- Diálogo externo reutilizable -->
     <add-devices-dialog
         ref="addDialog"
         :sowingId="sowingId"
         @device-added="loadDevices"
     />
 
-    <!-- Diálogo de actualización -->
     <update-devices-dialog
         v-model:visible="showUpdateDialog"
         :device="selectedDevice"
@@ -156,30 +163,25 @@ export default {
 </template>
 
 <style scoped>
-.iot-container {
-  padding: 1rem;
-}
+
 
 .iot-title {
   text-align: center;
-  margin-bottom: 1rem;
+
   font-weight: bold;
   font-size: 1.5rem;
 }
-
-
-
 .iot-card-style {
   width: 300px;
   border-radius: 25px;
   text-align: center;
-  padding: 1rem;
+
   border: 2px solid #3E7C59;
 }
 
 .device-name {
   color: #3E7C59;
-  margin-bottom: 0.5rem;
+
 }
 
 .iot-info p {
