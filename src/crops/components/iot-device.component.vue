@@ -32,6 +32,11 @@ export default {
           return "";
       }
     },
+    formatDeviceType(deviceType) {
+      if (!deviceType) return "N/A";
+      // Separate words in camelcase by adding spaces before capital letters
+      return deviceType.replace(/([a-z])([A-Z])/g, '$1 $2');
+    },
     async loadDevices() {
       this.loading = true;
       const sowingsDevicesService = new SowingsDevicesApiService();
@@ -110,7 +115,7 @@ export default {
         <template #content>
           <!-- Nombre dinámico basado en el tipo de dispositivo -->
           <h4 class="device-name">
-            {{ device.deviceType === "Sensor" ? "Environment Collector" : "Irrigation Controller" }}
+            {{ formatDeviceType(device.deviceType)}}
           </h4>
           <img
               :src="getSensorImage(device.deviceType)"
@@ -118,7 +123,7 @@ export default {
               class="sensor-image"
           />
           <div class="iot-info">
-            <p><strong>Device Type:</strong> {{ device.deviceType || "N/A" }}</p>
+            <p><strong>Device Type:</strong> {{ formatDeviceType(device.deviceType)|| "N/A" }}</p>
             <p>
               <strong>Status:</strong>
               <pv-button
