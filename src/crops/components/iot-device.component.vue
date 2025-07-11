@@ -32,6 +32,7 @@ export default {
           return "";
       }
     },
+
     formatDeviceType(deviceType) {
       if (!deviceType) return "N/A";
       // Separate words in camelcase by adding spaces before capital letters
@@ -59,6 +60,7 @@ export default {
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
+        timeZone: "UTC",
       });
     },
     openAddDeviceDialog() {
@@ -80,9 +82,9 @@ export default {
     },
     getSensorImage(deviceType) {
       switch (deviceType) {
-        case "Sensor":
+        case "EnvironmentCollector":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp";
-        case "Actuator":
+        case "IrrigationController":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg";
         default:
           return "/images/default-device.png"; // Imagen predeterminada si no coincide
@@ -134,7 +136,7 @@ export default {
               />
             </p>
             <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
-            <div v-if="device.deviceType === 'Sensor'">
+            <div v-if="device.deviceType === 'EnvironmentCollector'">
               <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
               <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
               <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
