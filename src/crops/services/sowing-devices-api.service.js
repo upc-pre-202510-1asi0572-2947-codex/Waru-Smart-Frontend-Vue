@@ -20,4 +20,8 @@ export class SowingsDevicesApiService {
     async updateDevice(deviceId, deviceData) {
         return await http.put(`/crops-management/sowings/${deviceId}/devices`, deviceData);
     }
+
+    getDeviceLastValues() {
+        return http.get(`/analytics/device-last-values`);
+    }
 }
