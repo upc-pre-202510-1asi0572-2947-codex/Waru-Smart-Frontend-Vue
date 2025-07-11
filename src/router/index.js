@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 
-import CropsStatisticsComponent from "../crops/pages/crops-statistics.component.vue";
+import CropsStatisticsComponent from "../analytics/pages/analytics-crops.component.vue";
 import ControlPanelPageComponent from "../public/pages/control-panel-page.component.vue";
 import CropInformationManagementComponent from "../crops/pages/crop-information-management.component.vue";
 import CropListAndRegistrationManagementComponent from "../crops/pages/crop-list-and-registration-management.component.vue";
