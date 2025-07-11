@@ -115,7 +115,7 @@ export default {
         <template #content>
           <!-- Nombre dinámico basado en el tipo de dispositivo -->
           <h4 class="device-name">
-            {{ device.deviceType === "Sensor" ? "Environment Collector" : "Irrigation Controller" }}
+            {{ formatDeviceType(device.deviceType)}}
           </h4>
           <img
               :src="getSensorImage(device.deviceType)"
