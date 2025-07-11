@@ -4,7 +4,7 @@ import CropsAmountStatsCard from '/src/crops/components/crops-amount-stats-card.
 import ControlsByCropStats from '/src/crops/components/controls-by-crop-stats-card.component.vue';
 import DeviceTypeGeneralStatisticCard from '/src/crops/components/device-type-general-statistic-card.component.vue';
 import GeneralInformation from "../components/general-information.component.vue";
-import CropCare from "../components/iot-devices.component.vue";
+import CropCare from "../components/iot-device.component.vue";
 
 import ReportProductivityComponent from "../components/report-productivity.component.vue";
 import ProductivityReport from "../components/report-productivity.component.vue";

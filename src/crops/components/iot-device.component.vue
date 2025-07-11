@@ -1,7 +1,7 @@
 <script>
 import { SowingsDevicesApiService } from "../services/sowing-devices-api.service.js";
-import AddDevicesDialog from "./add-devices-dialog.component.vue";
-import UpdateDevicesDialog from "./update-devices-dialog.component.vue";
+import AddDevicesDialog from "./add-device-dialog.component.vue";
+import UpdateDevicesDialog from "./update-device-dialog.component.vue";
 
 export default {
   name: "IoT",
@@ -73,16 +73,14 @@ export default {
       this.showUpdateDialog = false; // Oculta el diálogo de actualización
       this.selectedDevice = null; // Limpia el dispositivo seleccionado
     },
-    getSensorImage(sensorType) {
-      switch (sensorType) {
-        case "Humidity":
+    getSensorImage(deviceType) {
+      switch (deviceType) {
+        case "Sensor":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp";
-        case "Temperature":
+        case "Actuator":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg";
-        case "SoilMoisture":
-          return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290071/sensores-1_kgqo94.jpg";
         default:
-          return "/images/default-sensor.png";
+          return "/images/default-device.png"; // Imagen predeterminada si no coincide
       }
     },
   },
@@ -99,26 +97,28 @@ export default {
 
 <template>
   <div class="iot-container">
-    <h3 class="iot-title">Sensors in this sowing</h3>
+    <h3 class="iot-title">Devices in this sowing</h3>
 
     <div v-if="loading">Cargando dispositivos...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else class="iot-grid">
-      <!-- Renderiza los dispositivos si existen -->
       <pv-card
           v-for="device in devices"
           :key="device.deviceId"
           class="iot-card-style"
       >
         <template #content>
-          <h4 class="device-name">{{ device.name }}</h4>
+          <!-- Nombre dinámico basado en el tipo de dispositivo -->
+          <h4 class="device-name">
+            {{ device.deviceType === "Sensor" ? "Environment Collector" : "Irrigation Controller" }}
+          </h4>
           <img
-              :src="getSensorImage(device.sensorType)"
-              alt="Sensor Image"
+              :src="getSensorImage(device.deviceType)"
+              alt="Device Image"
               class="sensor-image"
           />
           <div class="iot-info">
-            <p><strong>Sensor Type:</strong> {{ device.sensorType || "N/A" }}</p>
+            <p><strong>Device Type:</strong> {{ device.deviceType || "N/A" }}</p>
             <p>
               <strong>Status:</strong>
               <pv-button
@@ -129,12 +129,15 @@ export default {
               />
             </p>
             <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
-            <p><strong>Location:</strong> {{ device.location || "N/A" }}</p>
+            <div v-if="device.deviceType === 'Sensor'">
+              <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
+              <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
+              <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
+            </div>
           </div>
         </template>
       </pv-card>
 
-      <!-- Tarjeta para agregar dispositivo siempre visible -->
       <pv-card class="iot-card-style add-device-card" @click="openAddDeviceDialog">
         <template #content>
           <div class="add-device-content">
@@ -145,48 +148,40 @@ export default {
       </pv-card>
     </div>
 
-    <!-- Diálogo externo reutilizable -->
     <add-devices-dialog
         ref="addDialog"
         :sowingId="sowingId"
         @device-added="loadDevices"
     />
 
-    <!-- Diálogo de actualización -->
     <update-devices-dialog
         v-model:visible="showUpdateDialog"
         :device="selectedDevice"
         @device-updated="updateDeviceInList"
     />
-
   </div>
 </template>
 
 <style scoped>
-.iot-container {
-  padding: 1rem;
-}
+
 
 .iot-title {
   text-align: center;
-  margin-bottom: 1rem;
+
   font-weight: bold;
   font-size: 1.5rem;
 }
-
-
-
 .iot-card-style {
   width: 300px;
   border-radius: 25px;
   text-align: center;
-  padding: 1rem;
+
   border: 2px solid #3E7C59;
 }
 
 .device-name {
   color: #3E7C59;
-  margin-bottom: 0.5rem;
+
 }
 
 .iot-info p {
