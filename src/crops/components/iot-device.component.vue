@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       devices: [],
+      deviceLastValues: [], // Inicialización de los valores de los dispositivos
       loading: true,
       error: null,
       selectedDevice: null, // Dispositivo seleccionado para actualizar
@@ -33,26 +34,40 @@ export default {
       }
     },
 
+    getLastValuesForDevice(deviceId) {
+      // Busca los valores del dispositivo en la lista de valores obtenidos
+      return this.deviceLastValues.find((value) => value.deviceIdValue === deviceId) || {};
+    },
+
     formatDeviceType(deviceType) {
       if (!deviceType) return "N/A";
-      // Separate words in camelcase by adding spaces before capital letters
-      return deviceType.replace(/([a-z])([A-Z])/g, '$1 $2');
+      // Separar palabras en camelCase agregando espacios antes de las mayúsculas
+      return deviceType.replace(/([a-z])([A-Z])/g, "$1 $2");
     },
+
     async loadDevices() {
       this.loading = true;
       const sowingsDevicesService = new SowingsDevicesApiService();
       try {
-        const response = await sowingsDevicesService.getDevicesBySowingId(this.sowingId);
-        this.devices = response.data;
+        // Cargar dispositivos y valores recientes en paralelo
+        const [devicesResponse, lastValuesResponse] = await Promise.all([
+          sowingsDevicesService.getDevicesBySowingId(this.sowingId),
+          sowingsDevicesService.getDeviceLastValues(),
+        ]);
+        this.devices = devicesResponse.data;
+        this.deviceLastValues = lastValuesResponse.data;
       } catch (error) {
         console.error("Error al cargar dispositivos IoT:", error);
+        this.error = "No se pudieron cargar los dispositivos.";
         this.devices = [];
+        this.deviceLastValues = [];
       } finally {
         this.loading = false;
       }
     },
+
     formatDate(dateString) {
-      if (!dateString) return null;
+      if (!dateString) return "N/A";
       const date = new Date(dateString);
       return date.toLocaleString("es-ES", {
         day: "2-digit",
@@ -63,23 +78,28 @@ export default {
         timeZone: "UTC",
       });
     },
+
     openAddDeviceDialog() {
       this.$refs.addDialog.showDialog = true;
     },
+
     updateDeviceInList(updatedDevice) {
-      const index = this.devices.findIndex(device => device.id === updatedDevice.id);
+      const index = this.devices.findIndex((device) => device.id === updatedDevice.id);
       if (index !== -1) {
         this.devices.splice(index, 1, updatedDevice); // Reemplaza el dispositivo actualizado
       }
     },
+
     openUpdateDialog(device) {
       this.selectedDevice = device;
       this.showUpdateDialog = true;
     },
+
     closeUpdateDialog() {
       this.showUpdateDialog = false; // Oculta el diálogo de actualización
       this.selectedDevice = null; // Limpia el dispositivo seleccionado
     },
+
     getSensorImage(deviceType) {
       switch (deviceType) {
         case "EnvironmentCollector":
@@ -91,6 +111,7 @@ export default {
       }
     },
   },
+
   watch: {
     sowingId: {
       immediate: true,
@@ -115,9 +136,8 @@ export default {
           class="iot-card-style"
       >
         <template #content>
-          <!-- Nombre dinámico basado en el tipo de dispositivo -->
           <h4 class="device-name">
-            {{ formatDeviceType(device.deviceType)}}
+            {{ formatDeviceType(device.deviceType) }}
           </h4>
           <img
               :src="getSensorImage(device.deviceType)"
@@ -125,7 +145,8 @@ export default {
               class="sensor-image"
           />
           <div class="iot-info">
-            <p><strong>Device Type:</strong> {{ formatDeviceType(device.deviceType)|| "N/A" }}</p>
+            <p><strong>Device ID:</strong> {{ device.deviceId || "N/A" }}</p>
+            <p><strong>Device Type:</strong> {{ formatDeviceType(device.deviceType) || "N/A" }}</p>
             <p>
               <strong>Status:</strong>
               <pv-button
@@ -135,11 +156,11 @@ export default {
                   @click="openUpdateDialog(device)"
               />
             </p>
-            <p><strong>Last Sync:</strong> {{ formatDate(device.lastSyncDate) || "N/A" }}</p>
+            <p><strong>Last Sync:</strong> {{ formatDate(getLastValuesForDevice(device.deviceId).timestamp) || "N/A" }}</p>
             <div v-if="device.deviceType === 'EnvironmentCollector'">
-              <p><strong>Humidity:</strong> {{ device.humidity || 0 }}%</p>
-              <p><strong>Temperature:</strong> {{ device.temperature || 0 }}°C</p>
-              <p><strong>Soil Moisture:</strong> {{ device.soilMoisture || 0 }}%</p>
+              <p><strong>Humidity:</strong> {{ getLastValuesForDevice(device.deviceId).humidity || 0 }}%</p>
+              <p><strong>Temperature:</strong> {{ getLastValuesForDevice(device.deviceId).temperatureValue || 0 }}°C</p>
+              <p><strong>Soil Moisture:</strong> {{ getLastValuesForDevice(device.deviceId).soilMoistureValue || 0 }}%</p>
             </div>
           </div>
         </template>
