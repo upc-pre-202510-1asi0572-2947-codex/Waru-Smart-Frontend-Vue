@@ -19,8 +19,8 @@ export default {
         status: "Disconnected", // Estado predeterminado
       },
       deviceTypeOptions: [
-        { label: "Sensor", value: "Sensor" },
-        { label: "Actuator", value: "Actuator" },
+        { label: "Enviroment Collector", value: "EnviromentCollector" },
+        { label: "Irrigation Controller", value: "IrrigationController" },
       ],
       loading: false,
       error: null,
