@@ -51,16 +51,16 @@ export default {
 <template>
   <h1>{{$t('welcomeStatistics')}}</h1>
   <pv-tab-view v-model:active-tab="activeTab">
-    <pv-tab-panel header="Enviroment Report" name="Enviroment-Report">
+    <pv-tab-panel :header="$t('enviromentReport')" name="Enviroment-Report">
       <enviroment-report></enviroment-report>
     </pv-tab-panel>
-    <pv-tab-panel header="Zone Averages Report" name="Crop-Productivity">
+    <pv-tab-panel :header="$t('zoneAveragesReport')" name="Crop-Productivity">
       <productivity-report></productivity-report>
     </pv-tab-panel>
-    <pv-tab-panel header="Daily Averages Report" name="Water-Consume-Report">
+    <pv-tab-panel :header="$t('dailyAveragesReport')" name="Water-Consume-Report">
       <water-consumption-report></water-consumption-report>
     </pv-tab-panel>
-    <pv-tab-panel header="Device Reading History" name="Tendencies-and-recomendations">
+    <pv-tab-panel :header="$t('deviceReadingHistory')" name="Tendencies-and-recomendations">
       <tendencies-and-recomendations-report></tendencies-and-recomendations-report>
     </pv-tab-panel>
   </pv-tab-view>
@@ -77,7 +77,7 @@ export default {
 h1{
   color:black;
   font-size: 2.7rem;
-  margin-bottom:10%;
+  margin-bottom:3%;
 }
 
 @media (max-width: 768px) {

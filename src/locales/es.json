@@ -2,7 +2,7 @@
   "toolbarControlPanel": "Panel de control",
   "toolbarCropsRegistration": "Registro de cultivos",
   "seasonCropRecommendation": "Recomendación de cultivos por temporada",
-  "welcomeStatistics": "Bienvenido a la sección de estadísticas",
+  "welcomeStatistics": "Bienvenido al Panel de Control de Analytics",
   "mostRegisteredCrops": "Cultivos más registrados",
   "wannaKnowMore": "¿Quieres saber más?",
   "mostControlledCrops": "Cultivos con más controles dentro de la app",
@@ -52,5 +52,11 @@
   "DeviceTypeUsed": "Tipos de dispositivos utilizados en WaruSmart",
   "LastUpdate": "Ultima actualizacion",
   "EnviromentHumidity": "Humedad ambiental",
-  "EnviromentTemperature": "Temperatura ambiental"
+  "EnviromentTemperature": "Temperatura ambiental",
+  "enviromentReport": "Reporte Ambiental",
+  "zoneAveragesReport": "Reporte de Promedios por Zona",
+  "dailyAveragesReport": "Reporte de Promedios Diarios",
+  "deviceReadingHistory": "Historial de Lecturas del Dispositivo",
+  "analyticsReports": "Reportes analíticos",
+  "cropRegistration": "Registro de cultivos"
 }
