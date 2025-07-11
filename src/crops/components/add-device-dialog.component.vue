@@ -19,7 +19,7 @@ export default {
         status: "Disconnected", // Estado predeterminado
       },
       deviceTypeOptions: [
-        { label: "Enviroment Collector", value: "EnviromentCollector" },
+        { label: "Enviroment Collector", value: "EnvironmentCollector" },
         { label: "Irrigation Controller", value: "IrrigationController" },
       ],
       loading: false,

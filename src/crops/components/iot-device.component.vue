@@ -80,9 +80,9 @@ export default {
     },
     getSensorImage(deviceType) {
       switch (deviceType) {
-        case "Sensor":
+        case "EnvironmentCollector":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290051/sensor_de_humedad_hpz4u3.webp";
-        case "Actuator":
+        case "IrrigationController":
           return "https://res.cloudinary.com/drkelnilg/image/upload/v1747290027/sensor-de-temperatura_nykwvs.jpg";
         default:
           return "/images/default-device.png"; // Imagen predeterminada si no coincide
