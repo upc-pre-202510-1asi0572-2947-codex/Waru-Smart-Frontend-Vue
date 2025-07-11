@@ -10,10 +10,10 @@ import ReportProductivityComponent from "../components/report-zone-averages.comp
 import ProductivityReport from "../components/report-zone-averages.component.vue";
 import ReportWaterConsumptionComponent from "../components/report-daily-averages.component.vue";
 import ReportEnviromentComponent from "../components/report-enviroment.component.vue";
-import ReportTendenciesAndRecomendationsComponent from "../components/report-tendencies-and-recomendations.component.vue";
+import ReportTendenciesAndRecomendationsComponent from "../components/report-history.component.vue";
 import WaterConsumptionReport from "../components/report-daily-averages.component.vue";
 import EnviromentReport from "../components/report-enviroment.component.vue";
-import TendenciesAndRecomendationsReport from "../components/report-tendencies-and-recomendations.component.vue";
+import TendenciesAndRecomendationsReport from "../components/report-history.component.vue";
 
 export default {
   name: "crops-statistics",
@@ -60,7 +60,7 @@ export default {
     <pv-tab-panel header="Daily Averages Report" name="Water-Consume-Report">
       <water-consumption-report></water-consumption-report>
     </pv-tab-panel>
-    <pv-tab-panel header="Tendencies and Recomendations" name="Tendencies-and-recomendations">
+    <pv-tab-panel header="Device Reading History" name="Tendencies-and-recomendations">
       <tendencies-and-recomendations-report></tendencies-and-recomendations-report>
     </pv-tab-panel>
   </pv-tab-view>
