@@ -14,10 +14,11 @@ export class AnalyticsApiService {
         return http.get(`/analytics/device-last-values`);
     }
 
-    getHistory() {
-        return http.get(`/analytics/history`);
+    getHistory(zone, deviceId, from, to) {
+        return http.get('/analytics/history', {
+            params: { zone, deviceId, from, to }
+        });
     }
-
 
     getDailyAverages(zone, days) {
         return http.get('/analytics/daily-averages', {
